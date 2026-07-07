@@ -1,159 +1,477 @@
-// orderSampleData.js
+# Phase 5A — Pending Queue (Professional Print Shop Queue)
 
-const terminals = [
-  "JPR001",
-  "JPR002",
-  "JPR003",
-  "JPR004",
-  "JPR005",
-  "JPR006",
-  "JPR007",
-  "JPR008",
-  "JPR009",
-  "JPR010",
-];
+We are implementing the **Pending Queue** for the PrintEzy Partner Desktop App.
 
-const statuses = [
-  "Pending",
-  "Processing",
-  "Printed",
-  "Ready",
-  "Completed",
-  "Cancelled",
-];
+Do NOT redesign the application.
 
-const paymentMethods = ["upi", "card", "cash", "wallet"];
-const paymentStatuses = ["paid", "pending", "failed"];
-const collectionTypes = ["now", "later"];
-const fileTypes = ["PDF", "DOCX", "PPT", "JPG"];
-const colorModes = ["b&w", "color"];
-const printSides = ["single", "double"];
+Continue using the existing design system, colors, typography, spacing, components, animations, and layout from previous phases.
 
-const userNames = [
-  "Aarav Sharma",
-  "Vivaan Singh",
-  "Aditya Verma",
-  "Krishna Meena",
-  "Rohan Gupta",
-  "Priya Sharma",
-  "Ananya Jain",
-  "Sneha Verma",
-  "Neha Gupta",
-  "Kavya Singh",
-];
+Use the existing `orders.js` sample data.
 
-const orderSampleData = Array.from({ length: 70 }, (_, i) => {
-  const pageCount = Math.floor(Math.random() * 90) + 10;
-  const copies = Math.floor(Math.random() * 5) + 1;
+This phase is UI + queue management only.
 
-  const colorMode =
-    colorModes[Math.floor(Math.random() * colorModes.length)];
+No backend.
 
-  const printSide =
-    printSides[Math.floor(Math.random() * printSides.length)];
+No APIs.
 
-  const perPage =
-    colorMode === "color"
-      ? printSide === "double"
-        ? 10
-        : 5
-      : printSide === "double"
-      ? 2
-      : 1;
+No Printer Service integration yet.
 
-  const price = pageCount * copies * perPage;
+Everything should be modular and production-ready.
 
-  return {
-    _id: `6a450588fa3bf8ae9bfca${(600 + i).toString(16)}`,
+---
 
-    orderId: `PEZ-250${String(i + 1).padStart(3, "0")}`,
+# Application Authentication
 
-    terminal_Id: terminals[i % terminals.length],
+Before rendering the page, verify the application state.
 
-    userId: `user${String(i + 1).padStart(3, "0")}`,
+If any of the following fail, redirect appropriately.
 
-    user_name: `${userNames[i % userNames.length]} ${
-      Math.floor(i / userNames.length) + 1
-    }`,
+Required checks:
 
-    status: statuses[Math.floor(Math.random() * statuses.length)],
+- Partner is authenticated.
+- Terminal is assigned.
+- Shop is open.
+- Printer configuration exists.
 
-    cloudinaryPublicId: `orders/file_${i + 1}`,
+Do not implement backend authentication yet.
+Use the existing application state.
 
-    cloudinaryURL: `https://res.cloudinary.com/demo/raw/upload/file_${
-      i + 1
-    }.pdf`,
+---
 
-    otp: Math.floor(10000 + Math.random() * 90000),
+# Orders to Display
 
-    fileName: `Document_${i + 1}.pdf`,
+Load data from `orders.js`.
 
-    fileType: fileTypes[Math.floor(Math.random() * fileTypes.length)],
+Display ONLY orders where
 
-    pageCount,
+```js
+status === "Pending" || status === "Processing"
+```
 
-    colorMode,
+Ignore
 
-    printSide,
+- Printed
+- Ready
+- Completed
+- Cancelled
 
-    copies,
+There should always be only ONE Processing order.
 
-    price,
+That Processing order is always the Queue Head.
 
-    collectionType:
-      collectionTypes[Math.floor(Math.random() * collectionTypes.length)],
+All remaining jobs are Pending.
 
-    payment: {
-      status:
-        paymentStatuses[
-          Math.floor(Math.random() * paymentStatuses.length)
-        ],
+---
 
-      method:
-        paymentMethods[
-          Math.floor(Math.random() * paymentMethods.length)
-        ],
+# Queue Order
 
-      razorpayPaymentId: `pay_${100000 + i}`,
+Always sort automatically by
 
-      razorpayOrderId: `order_${200000 + i}`,
+Oldest Upload Time
 
-      razorpaySignature: `sig_${300000 + i}`,
-    },
+(uploadedAt ASC)
 
-    collected: Math.random() > 0.4,
+Never allow
 
-    payout: {
-      id: `payout_${400000 + i}`,
+- Manual sorting
+- Drag & Drop
+- Queue reordering
 
-      status: ["pending", "processing", "completed"][
-        Math.floor(Math.random() * 3)
-      ],
+The queue must always maintain itself automatically.
 
-      amount: price - Math.round(price * 0.02),
+---
 
-      platformCommission: Math.round(price * 0.02),
-    },
+# Queue Header
 
-    uploadedAt: new Date(
-      2026,
-      6,
-      (i % 28) + 1,
-      10 + (i % 8),
-      (i * 7) % 60
-    ),
+Create a professional desktop queue header.
 
-    updatedAt: new Date(
-      2026,
-      6,
-      (i % 28) + 1,
-      11 + (i % 8),
-      (i * 7) % 60
-    ),
-  };
-});
+Left side
 
-export default orderSampleData;
+Pending Queue
 
-// For CommonJS:
-// module.exports = orderSampleData;
+Below it
+
+XX Orders
+
+where XX is the total number of Pending + Processing jobs.
+
+Right side
+
+Search box
+
+No filter button.
+
+No sort button.
+
+No refresh button.
+
+The Auto Print toggle already exists in the GLOBAL APPLICATION HEADER.
+
+Do NOT add another Auto Print toggle inside this page.
+
+---
+
+# Search
+
+Provide instant search.
+
+Search ONLY by
+
+- Order ID
+- User Name
+
+Search should be case insensitive.
+
+---
+
+# Manual Printing
+
+When
+
+Auto Print = OFF
+
+Display a single button inside the queue header.
+
+Button text
+
+Print Next
+
+Do NOT place Print buttons inside queue cards.
+
+When clicked
+
+Print ONLY the Processing order.
+
+Simulation only.
+
+Processing
+
+↓
+
+Printed
+
+↓
+
+Remove from Pending Queue
+
+↓
+
+Next Pending order automatically becomes Processing.
+
+The queue should always maintain one active Processing job.
+
+---
+
+# Auto Print
+
+When
+
+Auto Print = ON
+
+Hide the Print Next button.
+
+Instead display a subtle label
+
+"Automatic Printing Enabled"
+
+No printing logic yet.
+
+Later this will be handled by the Windows Printer Service.
+
+---
+
+# Queue Layout
+
+Use professional horizontal cards.
+
+Compact desktop design.
+
+Each row should be approximately 75–90px high.
+
+The user should be able to view many jobs at once without excessive scrolling.
+
+Avoid large mobile-style cards.
+
+Spacing should feel similar to enterprise desktop software.
+
+---
+
+# Queue Card
+
+Each queue card should be fully clickable.
+
+Clicking opens the Order Details drawer.
+
+Do NOT place any buttons inside the card.
+
+Display ONLY the following information.
+
+Left
+
+Document icon
+
+File Name
+
+User Name
+
+Center
+
+Total Pages
+
+Copies
+
+Right
+
+B&W / Colour badge
+
+Price
+
+Collection Type
+
+Display
+
+Collect Now
+
+or
+
+Collect Later
+
+Upload Time
+
+Status Badge
+
+Do NOT display
+
+Order ID
+
+OTP
+
+Payment
+
+Terminal
+
+Cloudinary
+
+User ID
+
+File Type
+
+Print Side
+
+Payout
+
+Any unnecessary information.
+
+Keep the cards extremely clean.
+
+---
+
+# Status Badge
+
+Processing
+
+Blue
+
+Pending
+
+Orange
+
+Professional rounded pill design.
+
+---
+
+# Queue Counter
+
+Display
+
+Pending Queue
+
+XX Orders
+
+Count only
+
+Pending
+
+Processing
+
+Automatically update when queue changes.
+
+---
+
+# Empty State
+
+Professional illustration.
+
+Heading
+
+No Pending Print Jobs
+
+Description
+
+New customer uploads will automatically appear here.
+
+---
+
+# Order Details Drawer
+
+Clicking any queue card opens a professional right-side drawer.
+
+Display complete information.
+
+Include
+
+Order ID
+
+User Name
+
+User ID
+
+Terminal
+
+OTP
+
+Filename
+
+Pages
+
+Copies
+
+Print Side
+
+Colour Mode
+
+Price
+
+Collection Type
+
+Payment Details
+
+Cloudinary URL
+
+Uploaded Time
+
+Updated Time
+
+Payout Details
+
+Read only.
+
+No editing.
+
+---
+
+# Animations
+
+Use smooth professional animations.
+
+Animate
+
+Queue movement
+
+Card removal
+
+Status updates
+
+Drawer open/close
+
+Avoid flashy effects.
+
+---
+
+# Performance
+
+Use
+
+React.memo
+
+useMemo
+
+useCallback
+
+Avoid unnecessary re-renders.
+
+Prepare for future support of thousands of print jobs.
+
+---
+
+# Components
+
+Organize into reusable components.
+
+components/
+
+queue/
+
+QueueHeader
+
+QueueSearch
+
+QueueCounter
+
+QueueList
+
+QueueCard
+
+QueueDrawer
+
+QueueEmptyState
+
+hooks/
+
+useQueue
+
+utils/
+
+queueUtils
+
+No business logic inside UI components.
+
+---
+
+# Code Quality
+
+Production-ready architecture.
+
+Reusable components.
+
+Clean folder structure.
+
+Consistent naming.
+
+Easy backend integration.
+
+No duplicated code.
+
+No mock API calls.
+
+Maintain the same UI quality and design language as previous phases.
+
+---
+
+# Professional UI Requirements
+
+Design this like a modern enterprise print management application.
+
+The interface should feel similar to commercial print shop software or POS systems.
+
+Use
+
+- Compact horizontal queue rows
+- Excellent alignment
+- Consistent spacing
+- Professional typography
+- Clean status badges
+- Minimal visual clutter
+- Soft hover effects
+- Smooth transitions
+- Desktop-first responsive layout
+
+Avoid
+
+- Oversized cards
+- Mobile-style layouts
+- Bright colorful designs
+- Unnecessary information
+- Extra buttons inside queue cards
+
+The operator should be able to scan dozens of print jobs quickly and understand the queue at a glance.
