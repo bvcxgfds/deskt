@@ -5,215 +5,278 @@ PrintEzy Partner Desktop Application
 
 Current Status:
 - Electron + React setup is complete.
-- Global theme is complete.
+- Folder structure is finalized.
+- Global dark theme is complete.
 - Routing is complete.
-- Login UI is already complete.
-- Folder structure already exists.
-- partnersData.js already exists.
-- Auth folder already exists.
-- Zustand is installed.
-- Do NOT change the existing folder structure.
-- Do NOT redesign the UI.
-- Modify only the files required for authentication logic.
+- Login UI is complete.
+- Authentication using partnersData.js is complete.
+- AuthProvider, authService, session handling, Zustand store and ProtectedRoute already exist.
+- DO NOT redesign the UI.
+- DO NOT modify the folder structure.
+- Improve only the authentication flow and application startup.
 
 Goal:
-Implement local authentication using partnersData.js only.
+Complete Phase 2.3 + Phase 2.4 by making the authentication experience production-ready while still using partnersData.js.
 
-This is a temporary authentication layer that will later be replaced by the Flask backend without changing the Login UI.
+==================================================
+PART 1 — Application Startup
+==================================================
 
-──────────────────────────────
+When Electron launches:
 
-Authentication Rules
+1. Initialize the application.
+2. Restore previous session.
+3. Show a full-screen splash/loading screen while checking authentication.
+4. Prevent Login page flashing before session restoration.
+5. After restoration:
+   - Authenticated → Dashboard
+   - Not authenticated → Login
 
-A partner can log in using either:
+==================================================
+PART 2 — Protected Routes
+==================================================
 
-• Email + Password
+Protect every partner page.
 
-OR
+Protected pages:
 
-• Phone + Password
+Dashboard
+Pending Queue
+Verify Customer
+Orders
+Analytics
+Settings
 
-The authentication should:
+Rules:
 
-1. Search partnersData.js
-2. Match email OR phone
-3. Compare password
-4. Verify:
-   - isVerified === true
-   - shopStatus === "active"
-5. Return the complete partner object if successful.
-6. Never expose the password after successful login.
+• Logged in
+→ Allow access.
 
-──────────────────────────────
+• Not logged in
+→ Redirect to Login.
 
-Session Rules
+Prevent manually opening protected routes.
 
-Implement Remember Me.
+==================================================
+PART 3 — Public Routes
+==================================================
 
-If Remember Me is checked:
-- Save session in localStorage.
+If already authenticated:
 
-Otherwise:
-- Save session in sessionStorage.
+Opening
 
-Session should contain:
+/login
 
-- partnerId
-- terminalId
-- name
-- email
-- phone
-- ownerName
-- shopStatus
-- online
-- bw
-- color
+should automatically redirect to
 
-Do NOT save password.
+/dashboard
 
-──────────────────────────────
+==================================================
+PART 4 — Logout
+==================================================
 
-Startup Behavior
-
-When the application starts:
-
-1. Check localStorage.
-2. If not found, check sessionStorage.
-3. If session exists:
-   - restore authentication
-   - go directly to Dashboard
-4. Otherwise:
-   - show Login page
-
-──────────────────────────────
-
-Logout
-
-Implement logout.
+Implement a complete logout flow.
 
 Logout should:
 
-- Clear Zustand auth state
-- Remove stored session
-- Redirect to Login
+• Clear Zustand auth state
+• Remove stored session
+• Clear Remember Me storage
+• Redirect to Login
+• Prevent browser back navigation from reopening Dashboard
 
-──────────────────────────────
+==================================================
+PART 5 — Remember Me
+==================================================
 
-Validation
+Improve Remember Me behavior.
 
-Email/Phone field
+Checked:
 
-- Required
+Store session in localStorage.
 
-Password
+Unchecked:
 
-- Required
+Store session in sessionStorage.
 
-If authentication fails:
+Application should correctly restore from whichever storage was used.
 
-Show proper inline error messages.
+==================================================
+PART 6 — Session Validation
+==================================================
 
-Examples:
+When restoring session:
 
-"Email or phone is required."
+Validate that:
 
-"Password is required."
+partnerId exists
 
-"Invalid email/phone or password."
+shopStatus == "active"
 
-"Partner account is not verified."
+isVerified == true
 
-"Shop is inactive."
+If validation fails:
 
-Never use alert().
+Clear session.
 
-──────────────────────────────
+Return to Login.
+
+==================================================
+PART 7 — UX Improvements
+==================================================
+
+Improve overall experience.
 
 Loading
 
-Simulate a real server request.
+• Full-screen loading while restoring session.
 
-Authentication should wait approximately 700ms before returning.
+• Login button spinner.
 
-During loading:
+• Disable controls during authentication.
 
-- Disable inputs
-- Disable Sign In button
-- Show loading spinner
-- Button text:
-  "Signing In..."
+Buttons
 
-──────────────────────────────
+Prevent multiple clicks.
 
-Architecture
+Inputs
 
-Keep responsibilities separated.
+Disable while loading.
 
-Login.jsx
-→ UI only
-→ Calls login()
+Focus
 
-authService.js
-→ Authentication logic
-→ Reads partnersData.js
+Autofocus email/phone field.
 
-session.js
-→ Save session
-→ Restore session
-→ Clear session
+Keyboard
 
-AuthProvider.jsx
-→ Provides authentication context
+Enter submits form.
 
-useAuth.js
-→ Custom hook
+Tab order should be correct.
 
-ProtectedRoute.jsx
-→ Redirect unauthenticated users
+Esc should close any future modal gracefully (prepare infrastructure only).
 
-authStore.js
-→ Zustand authentication state
+==================================================
+PART 8 — Error Handling
+==================================================
 
-validators.js
-→ Email/phone/password validation
+Display friendly inline errors.
 
-storage.js
-→ localStorage/sessionStorage helper functions
+Examples:
 
-Never place authentication logic directly inside Login.jsx.
+Email or phone required
 
-──────────────────────────────
+Password required
 
-Code Quality
+Invalid credentials
 
-- Use async/await
-- Use clean functions
-- Keep files modular
-- Add comments where useful
-- Avoid duplicated code
-- Follow production-quality coding standards
+Partner not verified
 
-──────────────────────────────
+Shop inactive
 
-Important
+Session expired
 
-Do NOT implement:
+Unexpected authentication error
 
-- Flask API
-- JWT
-- Axios
-- Refresh tokens
-- Printer service
-- Dashboard business logic
+Never use alert().
 
-Everything must work completely offline using partnersData.js.
+==================================================
+PART 9 — Notifications
+==================================================
 
-──────────────────────────────
+If a reusable notification/toast component already exists, use it.
 
-Output Format
+Otherwise create a lightweight reusable notification system for:
 
-1. First explain which files need modification and why.
-2. Then generate code one file at a time.
-3. Wait after each file before generating the next.
-4. Do not modify unrelated files.
-5. Do not skip any required file.
+Successful login
+
+Successful logout
+
+Session expired
+
+Authentication error
+
+The notification system should be reusable across the application.
+
+==================================================
+PART 10 — Code Cleanup
+==================================================
+
+Review the authentication module.
+
+Improve:
+
+Function names
+
+Comments
+
+Folder organization
+
+Imports
+
+Duplicate code
+
+Unused state
+
+Unused hooks
+
+Magic strings
+
+Extract constants where appropriate.
+
+==================================================
+PART 11 — Future Backend Compatibility
+==================================================
+
+Keep architecture backend-ready.
+
+The future Flask API should replace only authService.js.
+
+Login UI, Zustand store, routes, ProtectedRoute, session management and components should remain unchanged.
+
+==================================================
+PART 12 — Code Quality
+==================================================
+
+Use:
+
+React best practices
+
+Hooks
+
+Async/await
+
+Clean architecture
+
+Small reusable functions
+
+Consistent naming
+
+Production-quality comments only where useful
+
+Avoid unnecessary re-renders.
+
+==================================================
+Output Requirements
+==================================================
+
+1. Review the existing authentication architecture first.
+2. Explain which files need modification and why.
+3. Modify only the necessary files.
+4. Generate one file at a time.
+5. Wait before generating the next file.
+6. Do not rewrite unrelated files.
+7. Ensure the project compiles without errors.
+8. At the end, provide a checklist confirming:
+
+✓ Login works
+✓ Remember Me works
+✓ Session restoration works
+✓ Protected routes work
+✓ Public route redirection works
+✓ Logout works
+✓ Startup loading works
+✓ Error handling works
+✓ Keyboard shortcuts work
+✓ Ready to replace partnersData.js with Flask API later
+
+Do not implement any backend API, JWT, Axios, printer integration, or business logic. Everything should continue working locally using partnersData.js.
