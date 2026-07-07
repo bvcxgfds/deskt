@@ -1,253 +1,362 @@
-You are a senior Product Designer and Electron Desktop UI Engineer.
+You are a senior Electron + React desktop application developer.
 
-Redesign the PrintEzy Printer Configuration page.
+Project:
+PrintEzy Partner Desktop Application
 
-Use the attached image ONLY as visual inspiration.
+Current Status
 
-Do NOT copy the layout.
+✓ Electron + React setup completed
+✓ Authentication completed
+✓ Session persistence completed
+✓ Printer Selection UI completed
+✓ Printer selection logic completed
+✓ Zustand store completed
+✓ connectedPrinters.js is the temporary printer source
+✓ Printer selections are saved locally
 
-Design for a professional Windows desktop application.
+Do NOT change the existing folder structure.
 
-The application should feel closer to:
+Do NOT redesign the UI.
 
-- Docker Desktop
-- VS Code
-- Notion Desktop
-- Slack Desktop
-- Windows 11 Settings
+Do NOT implement the real Python PrinterService.
 
-rather than a responsive website.
+Do NOT use Electron IPC.
 
-================================================
+Goal
 
-Keep ALL existing functionality exactly the same.
+Implement Phase 3.3 — Shop Startup Flow.
 
-Do NOT modify:
+===========================================================
+Application Flow
+===========================================================
 
-- printerStore
-- printerService
-- connectedPrinters.js
-- Zustand
-- selection logic
-- local storage
-- validation
+The application flow should now become
 
-Modify UI only.
+Login
 
-================================================
-
-Design Principles
-
-• Compact
-• Information dense
-• Professional
-• Minimal
-• Fast to scan
-
-Avoid:
-
-- giant empty spaces
-- oversized cards
-- huge buttons everywhere
-- mobile layouts
-- centered wizard pages
-
-================================================
-
-Layout
-
-Use a desktop split layout.
-
-------------------------------------------------
-
-Top
+↓
 
 Printer Configuration
 
-Subtitle
+↓
 
-------------------------------------------------
+Start Shop
 
-Body
+↓
 
-70%
+Dashboard
 
-Available Printers
+The Dashboard should never open unless printer configuration is complete.
 
-30%
+===========================================================
+Startup Logic
+===========================================================
 
-Configuration Summary
+When the application launches
 
-------------------------------------------------
+1. Restore authentication session.
 
-Available Printers should be scrollable.
+2. Restore saved printer configuration.
 
-Summary remains sticky.
+3. Decide where to navigate.
 
-================================================
+Cases
 
-Printer Row
+Case 1
 
-Each printer should look like a compact desktop list item.
+Not logged in
 
-Include
+↓
 
-Printer icon
+Login
 
-Printer name
+----------------------------
 
-Connection badge
+Case 2
 
-Status badge
+Logged in
 
-Default badge
+Printer configuration missing
 
-Capabilities
+↓
 
-B&W
+Printer Configuration
 
-Colour
+----------------------------
 
-Buttons
+Case 3
 
-Assign B&W
+Logged in
 
-Assign Colour
+Printer configuration complete
 
-Hover state
+↓
 
-Selected state
+Dashboard
 
-Avoid large image cards.
+===========================================================
+Start Shop
+===========================================================
 
-================================================
+The Start Shop button should become functional.
 
-Summary Panel
+Before starting
 
-Contains
+Validate
 
-Selected B&W Printer
+✓ B&W printer selected
 
-Selected Colour Printer
+✓ If at least one printer supports colour,
+  a Colour printer must also be selected.
 
-Windows Default Printer
+✓ Selected printers must still exist.
 
-Connected Printers
+✓ Selected printers must be connected.
 
-Offline Printers
+✓ Selected printers must have status READY.
 
-Configuration Status
+If validation passes
 
-Large Start Shop button
+Save
 
-The Start Shop button remains disabled until configuration is valid.
+shopStarted = true
 
-================================================
+Navigate
 
-Visual Style
+Dashboard
 
-Dark theme
+===========================================================
+Dashboard Protection
+===========================================================
 
-12px radius
+Users should never access Dashboard unless
 
-Soft shadow
+Authenticated
 
-Thin borders
+AND
 
-Subtle gradients
+Printer configuration completed
 
-Excellent spacing
+AND
 
-Professional typography
+Shop started
 
-Use theme variables only.
+If any condition fails
 
-================================================
+Redirect
 
-Interaction
+Printer Configuration
 
-Hover highlight
+===========================================================
+Back Navigation
+===========================================================
 
-Smooth selection animation
+Once Start Shop succeeds
 
-Selected printer row gets colored border
+User should not be able to navigate back to Printer Configuration using browser history.
 
-Assigned buttons become
+Use replace navigation.
 
-Assigned
+===========================================================
+Shop Status
+===========================================================
 
-with check icon.
+Create temporary Shop State.
 
-================================================
+Suggested Zustand state
 
-Badges
+shopStarted
 
-READY
+shopLoading
 
-Green
+shopReady
 
-OFFLINE
+This is temporary until backend integration.
 
-Red
+===========================================================
+Persistence
+===========================================================
 
-CONNECTED
+Persist
 
-Blue
+shopStarted
 
-DEFAULT
+using localStorage.
 
-Purple
+Restore automatically when the application starts.
 
-B&W
+===========================================================
+Restart Behaviour
+===========================================================
 
-Grey
+Application Restart
 
-COLOUR
+↓
 
-Orange
+Restore Session
 
-================================================
+↓
 
-Animations
+Restore Printer Selection
 
-Only subtle Framer Motion.
+↓
 
-Hover
+Restore Shop State
 
-Selection
+↓
 
-Fade
+Navigate
 
-No flashy animations.
+Dashboard
 
-================================================
+===========================================================
+If Printers Change
+===========================================================
 
-Responsiveness
+During startup
 
-Desktop only.
+If one of the selected printers no longer exists
 
-Support
+or
 
-1366
+is disconnected
 
-1440
+or
 
-1600
+is OFFLINE
 
-1920
+Clear shopStarted
 
-No horizontal scrolling.
+Redirect
 
-================================================
+Printer Configuration
 
+Show message
+
+"Your printer configuration requires attention."
+
+===========================================================
+Loading
+===========================================================
+
+When Start Shop is pressed
+
+Show loading state
+
+Disable controls
+
+Button text
+
+Starting Shop...
+
+Simulate
+
+800ms
+
+After loading
+
+Navigate Dashboard.
+
+===========================================================
+Error Handling
+===========================================================
+
+Show inline messages.
+
+Examples
+
+Select a Black & White printer.
+
+Select a Colour printer.
+
+Selected printer is disconnected.
+
+Selected printer is offline.
+
+Printer configuration is incomplete.
+
+Never use alert().
+
+===========================================================
+Architecture
+===========================================================
+
+Business logic should NOT live inside the page.
+
+Recommended files
+
+store/
+
+shopStore.js
+
+services/
+
+shopService.js
+
+utils/
+
+shopValidation.js
+
+The UI should simply call
+
+startShop()
+
+Future backend integration should require changing only shopService.js.
+
+===========================================================
+Code Quality
+===========================================================
+
+Use
+
+React Hooks
+
+Zustand
+
+Reusable helpers
+
+Async/await
+
+Clean architecture
+
+Small reusable functions
+
+Avoid duplicated code.
+
+===========================================================
 Output
+===========================================================
 
-Review the current implementation.
+1. Review the current architecture.
 
-Explain UI improvements.
+2. Explain which files need modification.
 
-Generate updated files one by one.
+3. Explain why.
 
-Keep business logic untouched.
+4. Generate code one file at a time.
 
-The final result should feel like premium Windows desktop software instead of a responsive website.
+5. Wait before generating the next file.
+
+6. Do not modify unrelated files.
+
+7. Ensure the application compiles successfully.
+
+At the end verify
+
+✓ Login flow works
+
+✓ Printer configuration flow works
+
+✓ Start Shop works
+
+✓ Dashboard is protected
+
+✓ Startup restoration works
+
+✓ Shop state persists
+
+✓ Navigation works correctly
+
+✓ Ready for Phase 4 Dashboard UI
+
+Do not implement the real PrinterService, Electron IPC, Flask backend, or printing logic in this phase.
