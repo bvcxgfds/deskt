@@ -1,546 +1,159 @@
-You are a Senior Product Designer, UX Architect and Electron + React Desktop Application Engineer.
+// orderSampleData.js
+
+const terminals = [
+  "JPR001",
+  "JPR002",
+  "JPR003",
+  "JPR004",
+  "JPR005",
+  "JPR006",
+  "JPR007",
+  "JPR008",
+  "JPR009",
+  "JPR010",
+];
+
+const statuses = [
+  "Pending",
+  "Processing",
+  "Printed",
+  "Ready",
+  "Completed",
+  "Cancelled",
+];
 
-Project:
-PrintEzy Partner Desktop Application
+const paymentMethods = ["upi", "card", "cash", "wallet"];
+const paymentStatuses = ["paid", "pending", "failed"];
+const collectionTypes = ["now", "later"];
+const fileTypes = ["PDF", "DOCX", "PPT", "JPG"];
+const colorModes = ["b&w", "color"];
+const printSides = ["single", "double"];
 
-Current Progress
+const userNames = [
+  "Aarav Sharma",
+  "Vivaan Singh",
+  "Aditya Verma",
+  "Krishna Meena",
+  "Rohan Gupta",
+  "Priya Sharma",
+  "Ananya Jain",
+  "Sneha Verma",
+  "Neha Gupta",
+  "Kavya Singh",
+];
 
-✓ Phase 1 — Foundation completed
-✓ Phase 2 — Authentication completed
-✓ Phase 3 — Printer Configuration & Shop Startup completed
+const orderSampleData = Array.from({ length: 70 }, (_, i) => {
+  const pageCount = Math.floor(Math.random() * 90) + 10;
+  const copies = Math.floor(Math.random() * 5) + 1;
 
-The application currently opens directly into Dashboard after successful login and shop startup.
+  const colorMode =
+    colorModes[Math.floor(Math.random() * colorModes.length)];
 
-===========================================================
-Goal
-===========================================================
+  const printSide =
+    printSides[Math.floor(Math.random() * printSides.length)];
+
+  const perPage =
+    colorMode === "color"
+      ? printSide === "double"
+        ? 10
+        : 5
+      : printSide === "double"
+      ? 2
+      : 1;
 
-Build ONLY the Dashboard UI and the reusable Dashboard Component System.
+  const price = pageCount * copies * perPage;
 
-This phase is UI only.
+  return {
+    _id: `6a450588fa3bf8ae9bfca${(600 + i).toString(16)}`,
 
-NO backend.
+    orderId: `PEZ-250${String(i + 1).padStart(3, "0")}`,
 
-NO Flask.
+    terminal_Id: terminals[i % terminals.length],
 
-NO printer events.
+    userId: `user${String(i + 1).padStart(3, "0")}`,
 
-NO queue logic.
+    user_name: `${userNames[i % userNames.length]} ${
+      Math.floor(i / userNames.length) + 1
+    }`,
 
-NO customer verification logic.
+    status: statuses[Math.floor(Math.random() * statuses.length)],
 
-NO analytics calculations.
+    cloudinaryPublicId: `orders/file_${i + 1}`,
 
-NO printing logic.
+    cloudinaryURL: `https://res.cloudinary.com/demo/raw/upload/file_${
+      i + 1
+    }.pdf`,
 
-Everything must use temporary dummy data.
+    otp: Math.floor(10000 + Math.random() * 90000),
 
-The objective is to create reusable UI components that will later be reused across:
+    fileName: `Document_${i + 1}.pdf`,
 
-Dashboard
+    fileType: fileTypes[Math.floor(Math.random() * fileTypes.length)],
 
-Pending Queue
+    pageCount,
 
-Verify Customer
+    colorMode,
 
-Analytics
+    printSide,
 
-Settings
+    copies,
 
-Do NOT create duplicate UI components for different pages.
+    price,
 
-===========================================================
-Design Philosophy
-===========================================================
+    collectionType:
+      collectionTypes[Math.floor(Math.random() * collectionTypes.length)],
 
-Design for a professional Windows desktop application.
+    payment: {
+      status:
+        paymentStatuses[
+          Math.floor(Math.random() * paymentStatuses.length)
+        ],
 
-Inspiration
+      method:
+        paymentMethods[
+          Math.floor(Math.random() * paymentMethods.length)
+        ],
 
-• Docker Desktop
+      razorpayPaymentId: `pay_${100000 + i}`,
 
-• VS Code
+      razorpayOrderId: `order_${200000 + i}`,
 
-• Notion Desktop
+      razorpaySignature: `sig_${300000 + i}`,
+    },
 
-• Linear
+    collected: Math.random() > 0.4,
 
-• Slack Desktop
+    payout: {
+      id: `payout_${400000 + i}`,
 
-• Windows 11 Settings
+      status: ["pending", "processing", "completed"][
+        Math.floor(Math.random() * 3)
+      ],
 
-Avoid
+      amount: price - Math.round(price * 0.02),
 
-❌ Mobile layouts
+      platformCommission: Math.round(price * 0.02),
+    },
 
-❌ Oversized cards
+    uploadedAt: new Date(
+      2026,
+      6,
+      (i % 28) + 1,
+      10 + (i % 8),
+      (i * 7) % 60
+    ),
 
-❌ Large empty spaces
+    updatedAt: new Date(
+      2026,
+      6,
+      (i % 28) + 1,
+      11 + (i % 8),
+      (i * 7) % 60
+    ),
+  };
+});
 
-❌ Website-style dashboards
+export default orderSampleData;
 
-The dashboard should feel like software operators use for 8–12 hours every day.
-
-Compact.
-
-Professional.
-
-Information-dense.
-
-Fast to scan.
-
-===========================================================
-Dashboard Layout
-===========================================================
-
-Keep existing Sidebar.
-
-Keep existing Header.
-
-Main layout
-
---------------------------------------------------
-
-Welcome Header
-
-↓
-
-Summary Cards
-
-↓
-
-Responsive Widget Grid
-
---------------------------------------------------
-
-Widgets should align naturally.
-
-No unnecessary scrolling.
-
-Desktop-first.
-
-===========================================================
-Welcome Header
-===========================================================
-
-Display
-
-Greeting
-
-Partner Name
-
-Shop Name
-
-Today's Date
-
-Current Time
-
-Shop Status
-
-Small Online badge
-
-Example
-
-Good Morning, Himanshu
-
-QuickPrint Hub
-
-Tuesday, 7 July 2026
-
-09:45 AM
-
-● Shop Online
-
-===========================================================
-Summary Cards
-===========================================================
-
-Create reusable SummaryCard component.
-
-Dashboard should contain
-
-Today's Revenue
-
-Pending Orders
-
-Completed Orders
-
-Connected Printers
-
-Each card should display
-
-Icon
-
-Large value
-
-Subtitle
-
-Small trend indicator
-
-Hover effect
-
-Reusable design.
-
-Analytics page will reuse these cards later.
-
-===========================================================
-Widget System
-===========================================================
-
-Create reusable dashboard widgets.
-
-Pending Queue Widget
-
-Verify Customer Widget
-
-Connected Printers Widget
-
-Recent Activity Widget
-
-Empty Widget
-
-Loading Skeleton
-
-Section Header
-
-Statistic Badge
-
-Do NOT create Dashboard-specific widgets.
-
-Each widget must be reusable on future pages.
-
-===========================================================
-Pending Queue Widget
-===========================================================
-
-Preview only.
-
-Display
-
-Latest 5 jobs.
-
-Columns
-
-Customer
-
-Pages
-
-Copies
-
-Status
-
-Time
-
-Footer
-
-View All
-
-No actions.
-
-No printing.
-
-Dummy data only.
-
-===========================================================
-Verify Customer Widget
-===========================================================
-
-Preview only.
-
-Display
-
-Latest printed but uncollected jobs.
-
-Columns
-
-Customer
-
-OTP Status
-
-Pickup Status
-
-Printed Time
-
-Footer
-
-View All
-
-Dummy data only.
-
-===========================================================
-Connected Printers Widget
-===========================================================
-
-Use connectedPrinters.js
-
-Display
-
-Printer Name
-
-Ready
-
-Printing
-
-Offline
-
-Selected B&W
-
-Selected Colour
-
-Default Printer
-
-Connection Badge
-
-Compact desktop cards.
-
-No printer actions.
-
-No monitoring.
-
-No refresh.
-
-===========================================================
-Recent Activity Widget
-===========================================================
-
-Timeline style.
-
-Examples
-
-Order Uploaded
-
-Printer Ready
-
-Customer Verified
-
-Printer Offline
-
-Shop Started
-
-Dummy data only.
-
-===========================================================
-Reusable Components
-===========================================================
-
-Create reusable components inside
-
-components/dashboard/
-
-Suggested components
-
-SummaryCard
-
-DashboardWidget
-
-SectionHeader
-
-StatBadge
-
-QueueTable
-
-VerificationTable
-
-PrinterStatusCard
-
-PrinterGrid
-
-ActivityTimeline
-
-ActivityItem
-
-WidgetEmptyState
-
-WidgetLoading
-
-These components must be reusable by future pages.
-
-===========================================================
-Dummy Data
-===========================================================
-
-Create
-
-dashboardData.js
-
-queueData.js
-
-verificationData.js
-
-activityData.js
-
-Only temporary data.
-
-Do not connect backend.
-
-===========================================================
-Animations
-===========================================================
-
-Use Framer Motion.
-
-Subtle only.
-
-Hover
-
-Fade
-
-Card lift
-
-Loading
-
-Avoid excessive animations.
-
-===========================================================
-Visual Design
-===========================================================
-
-Dark Theme
-
-12px radius
-
-Thin borders
-
-Soft shadows
-
-Modern typography
-
-Excellent spacing
-
-Consistent icons
-
-Professional desktop appearance.
-
-===========================================================
-Architecture
-===========================================================
-
-Do not place UI inside Dashboard.jsx.
-
-Dashboard should simply compose reusable widgets.
-
-Example
-
-<WelcomeHeader />
-
-<SummaryCards />
-
-<PendingQueueWidget />
-
-<VerifyCustomerWidget />
-
-<ConnectedPrintersWidget />
-
-<ActivityWidget />
-
-===========================================================
-Future Compatibility
-===========================================================
-
-The same widgets will later be reused in
-
-Pending Queue page
-
-Verify Customer page
-
-Analytics page
-
-Settings page
-
-Build them with props instead of hardcoded values.
-
-Example
-
-<QueueTable
-    compact={true}
-    limit={5}
-/>
-
-Later
-
-<QueueTable
-    compact={false}
-    limit={50}
-    searchable
-    filterable
-/>
-
-Same component.
-
-===========================================================
-Code Quality
-===========================================================
-
-Use
-
-React Hooks
-
-Reusable components
-
-Props
-
-Clean architecture
-
-Small components
-
-Avoid duplicated code.
-
-Do not redesign Sidebar or Header.
-
-===========================================================
-Output
-===========================================================
-
-1. Review the existing project architecture.
-
-2. Explain every new component before creating it.
-
-3. Explain how each component will be reused later.
-
-4. Generate one file at a time.
-
-5. Wait before generating the next file.
-
-6. Do not rewrite unrelated files.
-
-7. Ensure everything compiles successfully.
-
-===========================================================
-Final Checklist
-===========================================================
-
-✓ Dashboard UI completed
-
-✓ Welcome Header completed
-
-✓ Summary Cards completed
-
-✓ Pending Queue Widget completed
-
-✓ Verify Customer Widget completed
-
-✓ Connected Printers Widget completed
-
-✓ Recent Activity Widget completed
-
-✓ Reusable widget system completed
-
-✓ Dummy data integrated
-
-✓ Ready for Phase 5 (Pending Queue)
-
-✓ Ready for Phase 6 (Verify Customer)
-
-✓ Ready for Phase 7 (Analytics)
-
-✓ Ready for Phase 8 (Settings)
-
-Do NOT implement business logic.
-
-Do NOT implement backend.
-
-Do NOT implement printer service.
-
-Do NOT implement live updates.
-
-Everything must remain UI-only using dummy data.
+// For CommonJS:
+// module.exports = orderSampleData;
