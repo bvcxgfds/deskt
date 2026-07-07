@@ -1,399 +1,253 @@
-You are a senior Electron + React desktop application developer.
+You are a senior Product Designer and Electron Desktop UI Engineer.
 
-Project:
-PrintEzy Partner Desktop Application
+Redesign the PrintEzy Printer Configuration page.
 
-Current Status
+Use the attached image ONLY as visual inspiration.
 
-- Electron + React project is complete.
-- Global dark theme is complete.
-- Routing is complete.
-- Authentication is complete.
-- Login, Logout and Session Persistence are working.
-- Sidebar, Header and Dashboard shell already exist.
-- connectedPrinters.js already exists and is the temporary source of printer data.
-- Do NOT change the project structure.
-- Do NOT redesign existing UI.
-- Build only the Printer Selection module.
+Do NOT copy the layout.
 
-===========================================================
-Goal
-===========================================================
+Design for a professional Windows desktop application.
 
-Implement Phase 3.1 + Phase 3.2
+The application should feel closer to:
 
-Build the complete Printer Selection screen and its selection logic using connectedPrinters.js.
+- Docker Desktop
+- VS Code
+- Notion Desktop
+- Slack Desktop
+- Windows 11 Settings
 
-No backend.
-No Python integration.
-No Electron IPC.
+rather than a responsive website.
 
-Everything should work with dummy printer data.
+================================================
 
-Later only printerService.js will be replaced.
+Keep ALL existing functionality exactly the same.
 
-===========================================================
-Printer Data
-===========================================================
+Do NOT modify:
 
-The printers come from:
+- printerStore
+- printerService
+- connectedPrinters.js
+- Zustand
+- selection logic
+- local storage
+- validation
 
-src/data/connectedPrinters.js
+Modify UI only.
 
-Each printer has the following structure:
+================================================
 
-{
-    id,
-    name,
-    status,
-    isConnected,
-    isDefault,
-    supportsBW,
-    supportsColor
-}
+Design Principles
 
-Do NOT modify this structure.
+• Compact
+• Information dense
+• Professional
+• Minimal
+• Fast to scan
 
-===========================================================
-Navigation Flow
-===========================================================
+Avoid:
 
-Current flow:
+- giant empty spaces
+- oversized cards
+- huge buttons everywhere
+- mobile layouts
+- centered wizard pages
 
-Login
-↓
+================================================
 
-Printer Selection
-↓
+Layout
 
-Dashboard
+Use a desktop split layout.
 
-Do NOT implement Start Shop navigation yet.
-That belongs to Phase 3.3.
+------------------------------------------------
 
-===========================================================
-UI Requirements
-===========================================================
-
-Create a premium desktop page.
-
-Top:
-
-Title
+Top
 
 Printer Configuration
 
 Subtitle
 
-"Select the printers that will be used while your shop is online."
+------------------------------------------------
 
-Below that:
+Body
 
-Two sections
-
----------------------------------
+70%
 
 Available Printers
 
----------------------------------
+30%
 
-Display every printer as a modern card.
+Configuration Summary
 
-Each card should contain
+------------------------------------------------
 
-Printer Icon
+Available Printers should be scrollable.
 
-Printer Name
+Summary remains sticky.
 
-Connection Badge
+================================================
 
-Status Badge
+Printer Row
 
-Default Printer Badge (if applicable)
+Each printer should look like a compact desktop list item.
 
-Supports
+Include
 
-Black & White
+Printer icon
 
-Colour
+Printer name
 
-Selection buttons
+Connection badge
 
-Set as B&W
+Status badge
 
-Set as Colour
+Default badge
 
-Disable buttons if printer cannot perform that role.
+Capabilities
 
-Example
-
-HP LaserJet
-
-READY
-
-Default
-
-Supports
-
-✓ Black & White
-
-✗ Colour
-
-[Set as B&W]
-
-[Disabled: Colour]
-
----------------------------------------------------
-
-Connection Badge
-
-Connected
-
-Disconnected
-
-Status Badge
-
-READY
-
-OFFLINE
-
-ERROR
-
-Use existing Badge component.
-
-===========================================================
-Selection Logic
-===========================================================
-
-Allow selecting
-
-One default B&W printer
-
-One default Colour printer
-
-Only one printer can be selected for each role.
-
-Selecting another printer automatically replaces the previous one.
-
-Show the current selections in a summary panel.
-
-Example
-
-Selected Printers
-
-Black & White
-
-HP LaserJet
+B&W
 
 Colour
 
-Canon ImageRunner
+Buttons
 
-===========================================================
-Validation
-===========================================================
+Assign B&W
 
-Prevent selecting
+Assign Colour
 
-Colour printer
+Hover state
 
-if
+Selected state
 
-supportsColor == false
+Avoid large image cards.
 
-Prevent selecting
+================================================
 
-Disconnected printers.
+Summary Panel
 
-Prevent selecting
-
-OFFLINE printers.
-
-Show inline messages.
-
-Do NOT use alert().
-
-===========================================================
-Selection State
-===========================================================
-
-Store selections using Zustand.
-
-Suggested state
-
-selectedBWPrinter
-
-selectedColorPrinter
-
-printerConfigurationCompleted
-
-Create a printerStore if it does not already exist.
-
-===========================================================
-Persistence
-===========================================================
-
-Save selections locally.
-
-Use localStorage.
-
-Suggested structure
-
-{
-  bwPrinterId: "...",
-  colorPrinterId: "..."
-}
-
-Restore selections automatically whenever the page loads.
-
-===========================================================
-Summary Card
-===========================================================
-
-Right side of the screen
-
-Printer Summary
-
-Display
+Contains
 
 Selected B&W Printer
 
 Selected Colour Printer
 
-Number of Connected Printers
+Windows Default Printer
 
-Default Windows Printer
+Connected Printers
+
+Offline Printers
 
 Configuration Status
 
-Ready
+Large Start Shop button
 
-or
+The Start Shop button remains disabled until configuration is valid.
 
-Incomplete
+================================================
 
-===========================================================
-Empty State
-===========================================================
+Visual Style
 
-If no printers exist
+Dark theme
 
-Show
+12px radius
 
-Printer icon
+Soft shadow
 
-"No printers detected"
+Thin borders
 
-Retry button (UI only)
+Subtle gradients
 
-===========================================================
-Loading
-===========================================================
+Excellent spacing
 
-Simulate loading printers for 500 ms.
+Professional typography
 
-Show skeleton cards while loading.
+Use theme variables only.
 
-===========================================================
+================================================
+
+Interaction
+
+Hover highlight
+
+Smooth selection animation
+
+Selected printer row gets colored border
+
+Assigned buttons become
+
+Assigned
+
+with check icon.
+
+================================================
+
+Badges
+
+READY
+
+Green
+
+OFFLINE
+
+Red
+
+CONNECTED
+
+Blue
+
+DEFAULT
+
+Purple
+
+B&W
+
+Grey
+
+COLOUR
+
+Orange
+
+================================================
+
 Animations
-===========================================================
 
-Use Framer Motion only for
+Only subtle Framer Motion.
 
-Card hover
+Hover
 
 Selection
 
-Fade in
+Fade
 
-Keep animations subtle.
+No flashy animations.
 
-===========================================================
-Code Architecture
-===========================================================
+================================================
 
-Do NOT place business logic inside the page.
+Responsiveness
 
-Recommended architecture
+Desktop only.
 
-pages/
-    PrinterSelection/
+Support
 
-components/
-    printer/
+1366
 
-store/
-    printerStore.js
+1440
 
-services/
-    printerService.js
+1600
 
-utils/
+1920
 
-printerService.js should temporarily return data from connectedPrinters.js.
+No horizontal scrolling.
 
-Later this file will use Electron IPC.
+================================================
 
-The UI should never import connectedPrinters.js directly.
-
-===========================================================
-Code Quality
-===========================================================
-
-Use
-
-React Hooks
-
-Zustand
-
-Reusable components
-
-Clean architecture
-
-Small reusable functions
-
-Avoid duplicated code.
-
-===========================================================
 Output
-===========================================================
 
-1. Review the existing architecture first.
+Review the current implementation.
 
-2. Explain which files need to be created or modified.
+Explain UI improvements.
 
-3. Explain why each file is needed.
+Generate updated files one by one.
 
-4. Generate code one file at a time.
+Keep business logic untouched.
 
-5. Wait after each file before generating the next.
-
-6. Do not rewrite unrelated files.
-
-7. Ensure everything compiles successfully.
-
-At the end verify
-
-✓ Printer cards display correctly
-
-✓ Printer status badges work
-
-✓ Connected/Disconnected badges work
-
-✓ Only compatible printers can be selected
-
-✓ Offline printers cannot be selected
-
-✓ Only one B&W printer can be selected
-
-✓ Only one Colour printer can be selected
-
-✓ Zustand state works
-
-✓ Local storage persistence works
-
-✓ Printer selections restore correctly
-
-✓ Ready for Phase 3.3 Start Shop Flow
-
-Do not implement Start Shop navigation or Python Printer Service integration in this phase.
+The final result should feel like premium Windows desktop software instead of a responsive website.
