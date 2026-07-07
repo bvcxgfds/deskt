@@ -1,307 +1,471 @@
-You are a senior Electron + React desktop application developer.
+You are a Senior Product Designer, UX Architect and Electron + React Desktop Application Engineer.
 
 Project:
 PrintEzy Partner Desktop Application
 
-Current Status
+Current Progress
 
-✓ Electron + React setup completed
-✓ Authentication completed
-✓ Session persistence completed
-✓ Printer Selection UI completed
-✓ Printer selection logic completed
-✓ Zustand store completed
-✓ connectedPrinters.js is the temporary printer source
-✓ Printer selections are saved locally
+✓ Phase 1 — Foundation completed
+✓ Phase 2 — Authentication completed
+✓ Phase 3 — Printer Configuration & Shop Startup completed
 
-Do NOT change the existing folder structure.
+The application currently opens directly into Dashboard after successful login and shop startup.
 
-Do NOT redesign the UI.
-
-Do NOT implement the real Python PrinterService.
-
-Do NOT use Electron IPC.
-
+===========================================================
 Goal
-
-Implement Phase 3.3 — Shop Startup Flow.
-
-===========================================================
-Application Flow
 ===========================================================
 
-The application flow should now become
+Build ONLY the Dashboard UI and the reusable Dashboard Component System.
 
-Login
+This phase is UI only.
 
-↓
+NO backend.
 
-Printer Configuration
+NO Flask.
 
-↓
+NO printer events.
 
-Start Shop
+NO queue logic.
 
-↓
+NO customer verification logic.
+
+NO analytics calculations.
+
+NO printing logic.
+
+Everything must use temporary dummy data.
+
+The objective is to create reusable UI components that will later be reused across:
 
 Dashboard
 
-The Dashboard should never open unless printer configuration is complete.
+Pending Queue
+
+Verify Customer
+
+Analytics
+
+Settings
+
+Do NOT create duplicate UI components for different pages.
 
 ===========================================================
-Startup Logic
+Design Philosophy
 ===========================================================
 
-When the application launches
+Design for a professional Windows desktop application.
 
-1. Restore authentication session.
+Inspiration
 
-2. Restore saved printer configuration.
+• Docker Desktop
 
-3. Decide where to navigate.
+• VS Code
 
-Cases
+• Notion Desktop
 
-Case 1
+• Linear
 
-Not logged in
+• Slack Desktop
+
+• Windows 11 Settings
+
+Avoid
+
+❌ Mobile layouts
+
+❌ Oversized cards
+
+❌ Large empty spaces
+
+❌ Website-style dashboards
+
+The dashboard should feel like software operators use for 8–12 hours every day.
+
+Compact.
+
+Professional.
+
+Information-dense.
+
+Fast to scan.
+
+===========================================================
+Dashboard Layout
+===========================================================
+
+Keep existing Sidebar.
+
+Keep existing Header.
+
+Main layout
+
+--------------------------------------------------
+
+Welcome Header
 
 ↓
 
-Login
-
-----------------------------
-
-Case 2
-
-Logged in
-
-Printer configuration missing
+Summary Cards
 
 ↓
 
-Printer Configuration
+Responsive Widget Grid
 
-----------------------------
+--------------------------------------------------
 
-Case 3
+Widgets should align naturally.
 
-Logged in
+No unnecessary scrolling.
 
-Printer configuration complete
-
-↓
-
-Dashboard
+Desktop-first.
 
 ===========================================================
-Start Shop
+Welcome Header
 ===========================================================
 
-The Start Shop button should become functional.
+Display
 
-Before starting
+Greeting
 
-Validate
+Partner Name
 
-✓ B&W printer selected
+Shop Name
 
-✓ If at least one printer supports colour,
-  a Colour printer must also be selected.
+Today's Date
 
-✓ Selected printers must still exist.
+Current Time
 
-✓ Selected printers must be connected.
-
-✓ Selected printers must have status READY.
-
-If validation passes
-
-Save
-
-shopStarted = true
-
-Navigate
-
-Dashboard
-
-===========================================================
-Dashboard Protection
-===========================================================
-
-Users should never access Dashboard unless
-
-Authenticated
-
-AND
-
-Printer configuration completed
-
-AND
-
-Shop started
-
-If any condition fails
-
-Redirect
-
-Printer Configuration
-
-===========================================================
-Back Navigation
-===========================================================
-
-Once Start Shop succeeds
-
-User should not be able to navigate back to Printer Configuration using browser history.
-
-Use replace navigation.
-
-===========================================================
 Shop Status
-===========================================================
 
-Create temporary Shop State.
+Small Online badge
 
-Suggested Zustand state
+Example
 
-shopStarted
+Good Morning, Himanshu
 
-shopLoading
+QuickPrint Hub
 
-shopReady
+Tuesday, 7 July 2026
 
-This is temporary until backend integration.
+09:45 AM
 
-===========================================================
-Persistence
-===========================================================
-
-Persist
-
-shopStarted
-
-using localStorage.
-
-Restore automatically when the application starts.
+● Shop Online
 
 ===========================================================
-Restart Behaviour
+Summary Cards
 ===========================================================
 
-Application Restart
+Create reusable SummaryCard component.
 
-↓
+Dashboard should contain
 
-Restore Session
+Today's Revenue
 
-↓
+Pending Orders
 
-Restore Printer Selection
+Completed Orders
 
-↓
+Connected Printers
 
-Restore Shop State
+Each card should display
 
-↓
+Icon
 
-Navigate
+Large value
 
-Dashboard
+Subtitle
 
-===========================================================
-If Printers Change
-===========================================================
+Small trend indicator
 
-During startup
+Hover effect
 
-If one of the selected printers no longer exists
+Reusable design.
 
-or
-
-is disconnected
-
-or
-
-is OFFLINE
-
-Clear shopStarted
-
-Redirect
-
-Printer Configuration
-
-Show message
-
-"Your printer configuration requires attention."
+Analytics page will reuse these cards later.
 
 ===========================================================
-Loading
+Widget System
 ===========================================================
 
-When Start Shop is pressed
+Create reusable dashboard widgets.
 
-Show loading state
+Pending Queue Widget
 
-Disable controls
+Verify Customer Widget
 
-Button text
+Connected Printers Widget
 
-Starting Shop...
+Recent Activity Widget
 
-Simulate
+Empty Widget
 
-800ms
+Loading Skeleton
 
-After loading
+Section Header
 
-Navigate Dashboard.
+Statistic Badge
+
+Do NOT create Dashboard-specific widgets.
+
+Each widget must be reusable on future pages.
 
 ===========================================================
-Error Handling
+Pending Queue Widget
 ===========================================================
 
-Show inline messages.
+Preview only.
+
+Display
+
+Latest 5 jobs.
+
+Columns
+
+Customer
+
+Pages
+
+Copies
+
+Status
+
+Time
+
+Footer
+
+View All
+
+No actions.
+
+No printing.
+
+Dummy data only.
+
+===========================================================
+Verify Customer Widget
+===========================================================
+
+Preview only.
+
+Display
+
+Latest printed but uncollected jobs.
+
+Columns
+
+Customer
+
+OTP Status
+
+Pickup Status
+
+Printed Time
+
+Footer
+
+View All
+
+Dummy data only.
+
+===========================================================
+Connected Printers Widget
+===========================================================
+
+Use connectedPrinters.js
+
+Display
+
+Printer Name
+
+Ready
+
+Printing
+
+Offline
+
+Selected B&W
+
+Selected Colour
+
+Default Printer
+
+Connection Badge
+
+Compact desktop cards.
+
+No printer actions.
+
+No monitoring.
+
+No refresh.
+
+===========================================================
+Recent Activity Widget
+===========================================================
+
+Timeline style.
 
 Examples
 
-Select a Black & White printer.
+Order Uploaded
 
-Select a Colour printer.
+Printer Ready
 
-Selected printer is disconnected.
+Customer Verified
 
-Selected printer is offline.
+Printer Offline
 
-Printer configuration is incomplete.
+Shop Started
 
-Never use alert().
+Dummy data only.
+
+===========================================================
+Reusable Components
+===========================================================
+
+Create reusable components inside
+
+components/dashboard/
+
+Suggested components
+
+SummaryCard
+
+DashboardWidget
+
+SectionHeader
+
+StatBadge
+
+QueueTable
+
+VerificationTable
+
+PrinterStatusCard
+
+PrinterGrid
+
+ActivityTimeline
+
+ActivityItem
+
+WidgetEmptyState
+
+WidgetLoading
+
+These components must be reusable by future pages.
+
+===========================================================
+Dummy Data
+===========================================================
+
+Create
+
+dashboardData.js
+
+queueData.js
+
+verificationData.js
+
+activityData.js
+
+Only temporary data.
+
+Do not connect backend.
+
+===========================================================
+Animations
+===========================================================
+
+Use Framer Motion.
+
+Subtle only.
+
+Hover
+
+Fade
+
+Card lift
+
+Loading
+
+Avoid excessive animations.
+
+===========================================================
+Visual Design
+===========================================================
+
+Dark Theme
+
+12px radius
+
+Thin borders
+
+Soft shadows
+
+Modern typography
+
+Excellent spacing
+
+Consistent icons
+
+Professional desktop appearance.
 
 ===========================================================
 Architecture
 ===========================================================
 
-Business logic should NOT live inside the page.
+Do not place UI inside Dashboard.jsx.
 
-Recommended files
+Dashboard should simply compose reusable widgets.
 
-store/
+Example
 
-shopStore.js
+<WelcomeHeader />
 
-services/
+<SummaryCards />
 
-shopService.js
+<PendingQueueWidget />
 
-utils/
+<VerifyCustomerWidget />
 
-shopValidation.js
+<ConnectedPrintersWidget />
 
-The UI should simply call
+<ActivityWidget />
 
-startShop()
+===========================================================
+Future Compatibility
+===========================================================
 
-Future backend integration should require changing only shopService.js.
+The same widgets will later be reused in
+
+Pending Queue page
+
+Verify Customer page
+
+Analytics page
+
+Settings page
+
+Build them with props instead of hardcoded values.
+
+Example
+
+<QueueTable
+    compact={true}
+    limit={5}
+/>
+
+Later
+
+<QueueTable
+    compact={false}
+    limit={50}
+    searchable
+    filterable
+/>
+
+Same component.
 
 ===========================================================
 Code Quality
@@ -311,52 +475,72 @@ Use
 
 React Hooks
 
-Zustand
+Reusable components
 
-Reusable helpers
-
-Async/await
+Props
 
 Clean architecture
 
-Small reusable functions
+Small components
 
 Avoid duplicated code.
+
+Do not redesign Sidebar or Header.
 
 ===========================================================
 Output
 ===========================================================
 
-1. Review the current architecture.
+1. Review the existing project architecture.
 
-2. Explain which files need modification.
+2. Explain every new component before creating it.
 
-3. Explain why.
+3. Explain how each component will be reused later.
 
-4. Generate code one file at a time.
+4. Generate one file at a time.
 
 5. Wait before generating the next file.
 
-6. Do not modify unrelated files.
+6. Do not rewrite unrelated files.
 
-7. Ensure the application compiles successfully.
+7. Ensure everything compiles successfully.
 
-At the end verify
+===========================================================
+Final Checklist
+===========================================================
 
-✓ Login flow works
+✓ Dashboard UI completed
 
-✓ Printer configuration flow works
+✓ Welcome Header completed
 
-✓ Start Shop works
+✓ Summary Cards completed
 
-✓ Dashboard is protected
+✓ Pending Queue Widget completed
 
-✓ Startup restoration works
+✓ Verify Customer Widget completed
 
-✓ Shop state persists
+✓ Connected Printers Widget completed
 
-✓ Navigation works correctly
+✓ Recent Activity Widget completed
 
-✓ Ready for Phase 4 Dashboard UI
+✓ Reusable widget system completed
 
-Do not implement the real PrinterService, Electron IPC, Flask backend, or printing logic in this phase.
+✓ Dummy data integrated
+
+✓ Ready for Phase 5 (Pending Queue)
+
+✓ Ready for Phase 6 (Verify Customer)
+
+✓ Ready for Phase 7 (Analytics)
+
+✓ Ready for Phase 8 (Settings)
+
+Do NOT implement business logic.
+
+Do NOT implement backend.
+
+Do NOT implement printer service.
+
+Do NOT implement live updates.
+
+Everything must remain UI-only using dummy data.
