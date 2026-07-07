@@ -1,282 +1,89 @@
-You are a senior Electron + React desktop application developer.
+// -----------------------------------------------------------------------------
+// PrintEzy Partner Desktop
+// Temporary printer data used until Electron connects to the Python PrinterService.
+//
+// This structure intentionally mirrors the future PrinterService response.
+// Replace this file later with printerService.getConnectedPrinters().
+// -----------------------------------------------------------------------------
 
-Project:
-PrintEzy Partner Desktop Application
+export const connectedPrinters = [
+  {
+    id: "PRINTER001",
 
-Current Status:
-- Electron + React setup is complete.
-- Folder structure is finalized.
-- Global dark theme is complete.
-- Routing is complete.
-- Login UI is complete.
-- Authentication using partnersData.js is complete.
-- AuthProvider, authService, session handling, Zustand store and ProtectedRoute already exist.
-- DO NOT redesign the UI.
-- DO NOT modify the folder structure.
-- Improve only the authentication flow and application startup.
+    name: "HP LaserJet Pro MFP M125-M126 PCLmS",
 
-Goal:
-Complete Phase 2.3 + Phase 2.4 by making the authentication experience production-ready while still using partnersData.js.
+    status: "READY",
 
-==================================================
-PART 1 — Application Startup
-==================================================
+    isConnected: true,
 
-When Electron launches:
+    isDefault: true,
 
-1. Initialize the application.
-2. Restore previous session.
-3. Show a full-screen splash/loading screen while checking authentication.
-4. Prevent Login page flashing before session restoration.
-5. After restoration:
-   - Authenticated → Dashboard
-   - Not authenticated → Login
+    supportsBW: true,
 
-==================================================
-PART 2 — Protected Routes
-==================================================
+    supportsColor: false,
+  },
 
-Protect every partner page.
+  {
+    id: "PRINTER002",
 
-Protected pages:
+    name: "Samsung M332x 382x 402x Series (USB002)",
 
-Dashboard
-Pending Queue
-Verify Customer
-Orders
-Analytics
-Settings
+    status: "READY",
 
-Rules:
+    isConnected: true,
 
-• Logged in
-→ Allow access.
+    isDefault: false,
 
-• Not logged in
-→ Redirect to Login.
+    supportsBW: true,
 
-Prevent manually opening protected routes.
+    supportsColor: false,
+  },
 
-==================================================
-PART 3 — Public Routes
-==================================================
+  {
+    id: "PRINTER003",
 
-If already authenticated:
+    name: "HP LaserJet Pro MFP M126nw",
 
-Opening
+    status: "OFFLINE",
 
-/login
+    isConnected: false,
 
-should automatically redirect to
+    isDefault: false,
 
-/dashboard
+    supportsBW: true,
 
-==================================================
-PART 4 — Logout
-==================================================
+    supportsColor: false,
+  },
 
-Implement a complete logout flow.
+  {
+    id: "PRINTER004",
 
-Logout should:
+    name: "Microsoft Print to PDF",
 
-• Clear Zustand auth state
-• Remove stored session
-• Clear Remember Me storage
-• Redirect to Login
-• Prevent browser back navigation from reopening Dashboard
+    status: "READY",
 
-==================================================
-PART 5 — Remember Me
-==================================================
+    isConnected: true,
 
-Improve Remember Me behavior.
+    isDefault: false,
 
-Checked:
+    supportsBW: true,
 
-Store session in localStorage.
+    supportsColor: true,
+  },
 
-Unchecked:
+  {
+    id: "PRINTER005",
 
-Store session in sessionStorage.
+    name: "Microsoft XPS Document Writer",
 
-Application should correctly restore from whichever storage was used.
+    status: "READY",
 
-==================================================
-PART 6 — Session Validation
-==================================================
+    isConnected: true,
 
-When restoring session:
+    isDefault: false,
 
-Validate that:
+    supportsBW: true,
 
-partnerId exists
-
-shopStatus == "active"
-
-isVerified == true
-
-If validation fails:
-
-Clear session.
-
-Return to Login.
-
-==================================================
-PART 7 — UX Improvements
-==================================================
-
-Improve overall experience.
-
-Loading
-
-• Full-screen loading while restoring session.
-
-• Login button spinner.
-
-• Disable controls during authentication.
-
-Buttons
-
-Prevent multiple clicks.
-
-Inputs
-
-Disable while loading.
-
-Focus
-
-Autofocus email/phone field.
-
-Keyboard
-
-Enter submits form.
-
-Tab order should be correct.
-
-Esc should close any future modal gracefully (prepare infrastructure only).
-
-==================================================
-PART 8 — Error Handling
-==================================================
-
-Display friendly inline errors.
-
-Examples:
-
-Email or phone required
-
-Password required
-
-Invalid credentials
-
-Partner not verified
-
-Shop inactive
-
-Session expired
-
-Unexpected authentication error
-
-Never use alert().
-
-==================================================
-PART 9 — Notifications
-==================================================
-
-If a reusable notification/toast component already exists, use it.
-
-Otherwise create a lightweight reusable notification system for:
-
-Successful login
-
-Successful logout
-
-Session expired
-
-Authentication error
-
-The notification system should be reusable across the application.
-
-==================================================
-PART 10 — Code Cleanup
-==================================================
-
-Review the authentication module.
-
-Improve:
-
-Function names
-
-Comments
-
-Folder organization
-
-Imports
-
-Duplicate code
-
-Unused state
-
-Unused hooks
-
-Magic strings
-
-Extract constants where appropriate.
-
-==================================================
-PART 11 — Future Backend Compatibility
-==================================================
-
-Keep architecture backend-ready.
-
-The future Flask API should replace only authService.js.
-
-Login UI, Zustand store, routes, ProtectedRoute, session management and components should remain unchanged.
-
-==================================================
-PART 12 — Code Quality
-==================================================
-
-Use:
-
-React best practices
-
-Hooks
-
-Async/await
-
-Clean architecture
-
-Small reusable functions
-
-Consistent naming
-
-Production-quality comments only where useful
-
-Avoid unnecessary re-renders.
-
-==================================================
-Output Requirements
-==================================================
-
-1. Review the existing authentication architecture first.
-2. Explain which files need modification and why.
-3. Modify only the necessary files.
-4. Generate one file at a time.
-5. Wait before generating the next file.
-6. Do not rewrite unrelated files.
-7. Ensure the project compiles without errors.
-8. At the end, provide a checklist confirming:
-
-✓ Login works
-✓ Remember Me works
-✓ Session restoration works
-✓ Protected routes work
-✓ Public route redirection works
-✓ Logout works
-✓ Startup loading works
-✓ Error handling works
-✓ Keyboard shortcuts work
-✓ Ready to replace partnersData.js with Flask API later
-
-Do not implement any backend API, JWT, Axios, printer integration, or business logic. Everything should continue working locally using partnersData.js.
+    supportsColor: true,
+  },
+];
