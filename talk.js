@@ -1,4 +1,4 @@
-Refine the existing PrintEzy Partner Desktop App without changing the current architecture, routing, or business logic. This task is only for UI improvements, layout fixes, and data consistency.
+Refine the existing PrintEzy Partner Desktop App without changing the current architecture, routing, or business logic. This task is only for UI improvements, layout fixes, data consistency, and authentication flow refinement.
 
 =========================
 1. SETTINGS PAGE
@@ -71,7 +71,10 @@ Charts and statistics should update based on the selected date range using sampl
 The page should not require horizontal scrolling.
 
 OTP input and customer details should fit properly inside the page.
-Equal spacing between all fields.
+
+Maintain equal spacing between all fields and sections.
+
+Keep the layout clean, responsive, and easy to read.
 
 =========================
 4. PENDING QUEUE
@@ -85,7 +88,7 @@ Keep Customer Name and File Name exactly as they are.
 
 Only improve the layout of the remaining details.
 
-Also add view detils button like added in verify customers
+Also add a "View Details" button similar to the one used in the Verify Customer page.
 
 Arrange these fields in one clean horizontal row with equal spacing:
 
@@ -125,7 +128,7 @@ Do not create any new mock data or duplicate sample objects.
 
 Improve the top application header.
 
-The Auto Print control should look more prominent and should be on left to logout button 
+The Auto Print control should look more prominent and should be positioned immediately to the left of the Logout button.
 
 Improve the Logout button styling.
 
@@ -138,7 +141,38 @@ Use:
 - Modern desktop toolbar appearance
 
 =========================
-7. OVERALL UI POLISH
+7. AUTHENTICATION FLOW
+=========================
+
+Improve the authentication and app startup experience.
+
+Current behavior needs to be refined.
+
+Requirements:
+
+- If the partner is already logged in and closes the desktop application, they should remain authenticated.
+- On reopening the application, do NOT show the Login page again.
+- Instead, always start from the Printer Selection page.
+- The partner should reselect the printer(s) for that session before entering the dashboard.
+- After printer selection, navigate to the Dashboard as usual.
+- Do not preserve the previous printer selection across app restarts.
+- Login session should remain active until the user explicitly clicks Logout.
+- Logout should completely clear the authentication session and return the user to the Login screen.
+- Preserve the existing authentication architecture while improving the startup flow.
+
+Expected flow:
+
+First Launch:
+Login → Printer Selection → Dashboard
+
+After Closing & Reopening:
+Printer Selection → Dashboard
+
+After Logout:
+Login → Printer Selection → Dashboard
+
+=========================
+8. OVERALL UI POLISH
 =========================
 
 Improve:
@@ -161,10 +195,10 @@ Ensure there is no horizontal scrolling anywhere unless absolutely necessary.
 IMPORTANT
 =========================
 
-- Do NOT change routing.
-- Do NOT change architecture.
+- Do NOT change routing unnecessarily.
+- Do NOT change the overall architecture.
 - Do NOT change business logic.
 - Do NOT redesign components unless requested.
 - Do NOT create new sample data.
 - Use only partnerData.js and orders.js wherever sample data is required.
-- Preserve all existing functionality while improving layout, consistency, and overall user experience.
+- Preserve all existing functionality while improving layout, consistency, authentication flow, and overall user experience.
