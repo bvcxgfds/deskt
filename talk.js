@@ -125,7 +125,7 @@ Do not create any new mock data or duplicate sample objects.
 
 Improve the top application header.
 
-The Auto Print control should look more prominent.
+The Auto Print control should look more prominent and should be on left to logout button 
 
 Improve the Logout button styling.
 
