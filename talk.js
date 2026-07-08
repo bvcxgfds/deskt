@@ -1,375 +1,475 @@
-# Phase 7 — Analytics Dashboard
+# Phase 8 — Settings (Professional Desktop Settings)
 
-We are implementing the Analytics page for the PrintEzy Partner Desktop App.
+We are implementing the **Settings** page for the PrintEzy Partner Desktop App.
 
-This page provides partners with insights into their print shop's performance.
+The Settings page should contain only operational and system-related configurations.
 
-Use the existing design system, typography, spacing, colors, icons, animations, and components from previous phases.
+Business information is managed from the Partner Web Portal, not from the desktop application.
+
+Continue using the existing design system, typography, spacing, colors, icons, shadows, animations, and reusable components created in previous phases.
 
 Do NOT redesign the application.
 
-Use the existing `orders.js` as the temporary database.
+Use temporary sample data.
 
-No backend.
+No backend integration.
 
-No APIs.
+No API calls.
 
-All analytics should be calculated from the sample data.
+No Printer Service integration yet.
 
-Everything must be modular and production-ready.
-
----
-
-# Data Source
-
-Use
-
-orders.js
-
-Generate all analytics from this data.
-
-No mock values.
+Everything should be modular and production-ready.
 
 ---
 
-# Header
+# Page Header
 
-Page Title
+Title
 
-Analytics
+Settings
 
 Subtitle
 
-Monitor your print shop performance.
-
-Top Right
-
-Date Range Selector
-
-Options
-
-Today
-
-Last 7 Days
-
-Last 30 Days
-
-All Time
-
-(Default: Today)
-
-Filtering should work locally.
+Manage your shop information, printer configuration, notifications, and system settings.
 
 ---
 
-# KPI Cards
+# Layout
 
-Display four professional summary cards.
+Create a modern desktop settings page.
 
-Card 1
+Use section cards.
 
-Total Orders
+Each section should have
 
-Count all orders.
+- Section icon
+- Section title
+- Small description
+- Professional spacing
+- Readable desktop layout
 
-Card 2
-
-Completed Orders
-
-Count
-
-status === "Completed"
-
-Card 3
-
-Revenue
-
-Sum of
-
-price
-
-for Completed orders.
-
-Display in ₹.
-
-Card 4
-
-Pages Printed
-
-Sum
-
-pageCount × copies
-
-for Completed orders.
+Maintain consistency with the rest of the application.
 
 ---
 
-# Second Row
+# 1. Shop Information
 
-Display four additional cards.
+This section is READ ONLY.
 
-Pending Orders
+Display the following information.
 
-Count Pending + Processing
+Business
 
-Ready for Verification
+• Shop Name
 
-Count Printed
+• Partner ID
 
-Average Order Value
+• Terminal ID
 
-Revenue ÷ Completed Orders
+• Owner Name
 
-Collection Later Orders
+• Email Address
 
-Count
+• Phone Number
 
-collectionType == "later"
+• Shop Address
+
+Pricing
+
+• B&W Single Side Price
+
+• B&W Double Side Price
+
+• Colour Single Side Price
+
+• Colour Double Side Price
+
+Business Information
+
+• UPI ID
+
+• Shop Rating
+
+• Opening Time
+
+• Closing Time
+
+Do NOT allow editing.
+
+Display a professional information message.
+
+"Shop information, pricing and business details can only be managed from the Partner Web Portal."
+
+Display one button.
+
+Manage Shop Information
+
+Clicking the button should open a placeholder Partner Portal URL.
+
+No editing inside the desktop application.
 
 ---
 
-# Revenue Chart
+# 2. Printer Configuration
 
-Display a professional line chart.
+Display printer information only.
 
-X-axis
+Read-only.
 
-Date
+Do NOT allow changing printers while the application is running.
 
-Y-axis
+Display
 
-Revenue
+Black & White Printer
 
-Calculate from Completed orders.
+• Selected Printer Name
 
-Allow switching between
+• Status
 
-Daily
+Connected / Offline
 
-Weekly
+Colour Printer
 
-Monthly
+• Selected Printer Name
+
+• Status
+
+Connected / Offline
+
+Paper
+
+• Default Paper Size
+
+A4
+
+Display an information message.
+
+"Printer selection can only be changed during application startup to prevent interruption of active print jobs."
+
+No Change Printer button.
+
+No Edit button.
 
 ---
 
-# Orders Chart
+# 3. Notifications
 
-Display a bar chart.
+Allow enabling or disabling desktop notifications.
 
-Show
+Provide three toggle switches.
 
-Completed
+• Order Received
+
+• Print Completed
+
+• Printer Offline
+
+Store values locally.
+
+No backend.
+
+Changes should apply immediately.
+
+---
+
+# 4. Shop Control
+
+This section controls whether the shop is accepting new print jobs.
+
+Display
+
+Current Status
+
+Show a professional status badge.
+
+Possible values
+
+Open
+
+Closed
+
+Use appropriate colors.
+
+Green
+
+Open
+
+Red
+
+Closed
+
+Display ONLY ONE primary button.
+
+When shop is OPEN
+
+Button text
+
+Stop Shop
+
+When shop is CLOSED
+
+Button text
+
+Start Shop
+
+The button text and behavior should change automatically based on the current shop status.
+
+---
+
+## Stop Shop Confirmation
+
+If the partner clicks
+
+Stop Shop
+
+Show a confirmation dialog.
+
+Title
+
+Stop Shop?
+
+Message
+
+Stopping the shop will:
+
+• Stop accepting new print orders.
+
+• Clear all Pending and Processing jobs from the current queue.
+
+• Jobs that are already Completed will remain unchanged.
+
+This action cannot be undone.
+
+Buttons
+
+Cancel
+
+Stop Shop
+
+If confirmed
+
+Change shop status to Closed.
+
+Clear all
 
 Pending
 
-Printed
+Processing
 
-Cancelled
+orders from the temporary queue.
 
-order counts.
+Completed, Printed and Cancelled orders must remain untouched.
 
----
-
-# Print Mode Distribution
-
-Display a doughnut chart.
-
-B&W
-
-Colour
-
-Percentage based.
+Return to Dashboard after completion.
 
 ---
 
-# Collection Type
+## Start Shop
 
-Display a doughnut chart.
-
-Collect Now
-
-Collect Later
-
----
-
-# Payment Methods
-
-Display a bar chart.
-
-UPI
-
-Card
-
-Wallet
-
-Cash
-
----
-
-# Top Customers
-
-Display a compact table.
-
-Columns
-
-Customer Name
-
-Orders
-
-Pages
-
-Revenue
-
-Top 10 only.
-
----
-
-# Recent Activity
-
-Display latest 10 activities.
-
-Example
-
-Himanshu Jat
-
-Completed Thesis.pdf
-
-2 min ago
-
-Use uploadedAt / updatedAt timestamps.
-
----
-
-# Quick Statistics
+If the shop is Closed
 
 Display
 
-Highest Order Value
+Start Shop
 
-Largest Document
+When clicked
 
-Average Pages Per Order
+Show a confirmation dialog.
 
-Average Copies Per Order
+Title
 
-Total Colour Orders
+Start Shop?
 
-Total B&W Orders
+Message
 
-Cancelled Orders
+Your shop will begin accepting new print orders.
 
-Completion Rate
+Buttons
+
+Cancel
+
+Start Shop
+
+If confirmed
+
+Change status to Open.
+
+Queue becomes ready to receive new orders.
+
+No additional actions required.
 
 ---
 
-# Empty State
+# 5. System Information
 
-If no data exists
+Read-only section.
 
 Display
 
-No Analytics Available
+Desktop Application Version
 
-Start receiving orders to view analytics.
+Printer Service Version
+
+Backend Status
+
+Database Status
+
+Printer Connection Status
+
+Last Synchronization Time
+
+Use temporary values.
+
+---
+
+# 6. Help & Support
+
+Display the following actions.
+
+• User Guide
+
+• Contact Support
+
+• Report an Issue
+
+• Privacy Policy
+
+• Terms & Conditions
+
+Each opens a placeholder page or URL.
+
+---
+
+# 7. Account
+
+Display
+
+Partner Name
+
+Registered Email
+
+Display one action.
+
+Logout
+
+Clicking Logout should show a confirmation dialog.
+
+Title
+
+Logout?
+
+Message
+
+You will be signed out of the PrintEzy Partner Desktop App.
+
+Buttons
+
+Cancel
+
+Logout
 
 ---
 
 # Components
 
-analytics/
+Organize into reusable components.
 
-AnalyticsHeader
+settings/
 
-KPICards
+SettingsPage
 
-RevenueChart
+SettingsHeader
 
-OrdersChart
+ShopInformationCard
 
-PrintModeChart
+PrinterConfigurationCard
 
-CollectionChart
+NotificationSettingsCard
 
-PaymentChart
+ShopControlCard
 
-TopCustomers
+SystemInformationCard
 
-RecentActivity
+HelpSupportCard
 
-QuickStats
+AccountCard
 
-AnalyticsEmptyState
+ConfirmationDialog
 
 hooks/
 
-useAnalytics
+useSettings
 
 utils/
 
-analyticsUtils
+settingsUtils
 
----
-
-# Charts
-
-Use a professional chart library already used in the project.
-
-Animations should be smooth.
-
-Desktop responsive.
-
-Avoid flashy colors.
-
-Use the application's existing design system.
+Business logic must remain outside UI components.
 
 ---
 
 # Performance
 
-Calculate analytics using
+Use
+
+React.memo
 
 useMemo
 
-Avoid recalculating on every render.
+useCallback
+
+Avoid unnecessary re-renders.
 
 ---
 
 # Code Quality
 
-Reusable components.
+Production-ready architecture.
 
-Clean architecture.
+Reusable components.
 
 Consistent naming.
 
-Production-ready.
+Desktop-first responsive layout.
 
-No duplicated code.
+Clean folder structure.
 
-Easy backend integration.
+No duplicated logic.
 
----
-
-# Future Backend Integration
-
-The page should later consume
-
-GET /analytics
-
-instead of calculating locally.
-
-Design the architecture so replacing local calculations with API responses requires minimal changes.
+Easy future backend integration.
 
 ---
 
-# Professional UI
+# UI Requirements
 
-The Analytics page should resemble modern business dashboards.
+Design the page like a professional enterprise desktop application.
 
-Keep it clean, minimal, and information-rich.
+Use
 
-Avoid unnecessary graphs.
+• Compact information cards
 
-Prioritize readability and actionable insights.
+• Professional typography
 
-Desktop-first layout with consistent spacing and responsive cards.
+• Soft shadows
+
+• Consistent spacing
+
+• Rounded corners
+
+• Modern toggle switches
+
+• Clean status badges
+
+• Desktop-friendly layout
+
+Avoid
+
+• Mobile-style layouts
+
+• Large colorful cards
+
+• Unnecessary settings
+
+• Duplicate controls
+
+The desktop application should remain focused on daily shop operations, while business management and pricing updates are handled through the Partner Web Portal.
