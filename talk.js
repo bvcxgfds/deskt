@@ -1,232 +1,125 @@
-# Phase 5A — Pending Queue (Professional Print Shop Queue)
+# Phase 6 — Customer Verification Queue
 
-We are implementing the **Pending Queue** for the PrintEzy Partner Desktop App.
+We are implementing the **Customer Verification Queue** for the PrintEzy Partner Desktop App.
+
+This queue is responsible for handing over printed documents to customers after verifying their OTP.
+
+Use the existing design system, typography, spacing, colors, animations, and components from previous phases.
 
 Do NOT redesign the application.
 
-Continue using the existing design system, colors, typography, spacing, components, animations, and layout from previous phases.
-
-Use the existing `orders.js` sample data.
-
-This phase is UI + queue management only.
+Use the existing `orders.js` as the temporary database.
 
 No backend.
 
 No APIs.
 
-No Printer Service integration yet.
+No Printer Service integration.
 
-Everything should be modular and production-ready.
-
----
-
-# Application Authentication
-
-Before rendering the page, verify the application state.
-
-If any of the following fail, redirect appropriately.
-
-Required checks:
-
-- Partner is authenticated.
-- Terminal is assigned.
-- Shop is open.
-- Printer configuration exists.
-
-Do not implement backend authentication yet.
-Use the existing application state.
+Everything must be modular and production-ready.
 
 ---
 
-# Orders to Display
+# Data Source
 
-Load data from `orders.js`.
+Load data from
 
-Display ONLY orders where
+orders.js
+
+Treat this as the temporary database.
+
+For this phase, display ONLY orders where
 
 ```js
-status === "Pending" || status === "Processing"
+status === "Printed"
 ```
 
 Ignore
 
-- Printed
-- Ready
-- Completed
-- Cancelled
+Pending
 
-There should always be only ONE Processing order.
+Processing
 
-That Processing order is always the Queue Head.
+Completed
 
-All remaining jobs are Pending.
+Cancelled
 
----
-
-# Queue Order
-
-Always sort automatically by
-
-Oldest Upload Time
-
-(uploadedAt ASC)
-
-Never allow
-
-- Manual sorting
-- Drag & Drop
-- Queue reordering
-
-The queue must always maintain itself automatically.
+Ready
 
 ---
 
 # Queue Header
 
-Create a professional desktop queue header.
+Professional desktop layout.
 
-Left side
+Left
 
-Pending Queue
+Ready for Customer Verification
 
-Below it
+Below
 
-XX Orders
+XX Orders Waiting
 
-where XX is the total number of Pending + Processing jobs.
+Automatically update the count.
 
-Right side
+Right
 
 Search box
 
-No filter button.
+No filters.
 
-No sort button.
+No sorting.
 
 No refresh button.
-
-The Auto Print toggle already exists in the GLOBAL APPLICATION HEADER.
-
-Do NOT add another Auto Print toggle inside this page.
 
 ---
 
 # Search
 
-Provide instant search.
+Search instantly while typing.
 
 Search ONLY by
 
 - Order ID
-- User Name
+- Customer Name
 
-Search should be case insensitive.
-
----
-
-# Manual Printing
-
-When
-
-Auto Print = OFF
-
-Display a single button inside the queue header.
-
-Button text
-
-Print Next
-
-Do NOT place Print buttons inside queue cards.
-
-When clicked
-
-Print ONLY the Processing order.
-
-Simulation only.
-
-Processing
-
-↓
-
-Printed
-
-↓
-
-Remove from Pending Queue
-
-↓
-
-Next Pending order automatically becomes Processing.
-
-The queue should always maintain one active Processing job.
-
----
-
-# Auto Print
-
-When
-
-Auto Print = ON
-
-Hide the Print Next button.
-
-Instead display a subtle label
-
-"Automatic Printing Enabled"
-
-No printing logic yet.
-
-Later this will be handled by the Windows Printer Service.
+Case insensitive.
 
 ---
 
 # Queue Layout
 
-Use professional horizontal cards.
+Display professional horizontal queue cards.
 
-Compact desktop design.
+Desktop optimized.
 
-Each row should be approximately 75–90px high.
+Compact rows.
 
-The user should be able to view many jobs at once without excessive scrolling.
+Height approximately 90px–110px.
 
-Avoid large mobile-style cards.
+Support many cards on screen.
 
-Spacing should feel similar to enterprise desktop software.
+Avoid mobile-style cards.
 
 ---
 
 # Queue Card
 
-Each queue card should be fully clickable.
+Each card should display ONLY
 
-Clicking opens the Order Details drawer.
+• File Name
 
-Do NOT place any buttons inside the card.
+• Customer Name
 
-Display ONLY the following information.
+• Total Pages
 
-Left
+• Copies
 
-Document icon
+• B&W / Colour
 
-File Name
+• Price
 
-User Name
-
-Center
-
-Total Pages
-
-Copies
-
-Right
-
-B&W / Colour badge
-
-Price
-
-Collection Type
+• Collection Type
 
 Display
 
@@ -236,47 +129,191 @@ or
 
 Collect Later
 
-Upload Time
+• Printed Status Badge
 
-Status Badge
+On the right side of every card place
 
-Do NOT display
+OTP Input Box
 
-Order ID
+Placeholder
 
-OTP
+Enter OTP
 
-Payment
+Verify Button
 
-Terminal
+Entire verification should happen directly on the card.
 
-Cloudinary
+Do NOT open any drawer.
 
-User ID
+Do NOT navigate anywhere.
 
-File Type
+Do NOT use modal dialogs.
 
-Print Side
+Everything happens inline.
 
-Payout
+---
 
-Any unnecessary information.
+# Card Example
 
-Keep the cards extremely clean.
+------------------------------------------------------------
+
+📄 Thesis_Final.pdf
+
+Himanshu Jat
+
+48 Pages
+
+2 Copies
+
+B&W
+
+₹96
+
+Collect Later
+
+[ OTP __________ ]
+
+[ Verify ]
+
+Printed
+
+------------------------------------------------------------
+
+---
+
+# OTP Input
+
+One input field per card.
+
+Accept only numeric values.
+
+Maximum
+
+5 digits
+
+(or use the same OTP length as stored in orders.js)
+
+Disable alphabetic characters.
+
+Pressing Enter should also trigger Verify.
+
+---
+
+# Verification Logic
+
+When Verify is pressed
+
+Compare entered OTP with
+
+order.otp
+
+from orders.js.
+
+Temporary local verification only.
+
+No backend.
+
+---
+
+# Successful Verification
+
+If OTP matches
+
+Show success animation.
+
+Show green success message
+
+Verification Successful
+
+Update order status
+
+Printed
+
+↓
+
+Completed
+
+Remove the card from the Verification Queue.
+
+Queue counter updates automatically.
+
+Next card shifts upward with smooth animation.
+
+---
+
+# Incorrect OTP
+
+If OTP is incorrect
+
+Do NOT remove the card.
+
+Display inline error
+
+Invalid OTP
+
+Please try again.
+
+Clear the input field.
+
+Allow unlimited retries.
+
+---
+
+# Loading State
+
+After clicking Verify
+
+Disable button.
+
+Show loading spinner for approximately one second.
+
+Then display either
+
+Success
+
+or
+
+Error.
 
 ---
 
 # Status Badge
 
-Processing
+Printed
 
 Blue
 
-Pending
+Completed
 
-Orange
+Green
 
-Professional rounded pill design.
+---
+
+# Collection Type Badge
+
+Collect Now
+
+Green outline
+
+Collect Later
+
+Orange outline
+
+---
+
+# Empty Queue
+
+If there are no Printed orders
+
+Display professional empty state.
+
+Heading
+
+No Customers Waiting
+
+Description
+
+Printed documents waiting for customer collection will appear here.
 
 ---
 
@@ -284,49 +321,35 @@ Professional rounded pill design.
 
 Display
 
-Pending Queue
+Ready for Customer Verification
 
-XX Orders
+XX Orders Waiting
 
 Count only
 
-Pending
+Printed
 
-Processing
+orders.
 
-Automatically update when queue changes.
-
----
-
-# Empty State
-
-Professional illustration.
-
-Heading
-
-No Pending Print Jobs
-
-Description
-
-New customer uploads will automatically appear here.
+Update automatically.
 
 ---
 
-# Order Details Drawer
+# View Details
 
-Clicking any queue card opens a professional right-side drawer.
+Add a small View Details icon button at the end of every card.
 
-Display complete information.
+Clicking it opens a read-only side drawer.
 
-Include
+Drawer shows
 
 Order ID
 
-User Name
+Terminal ID
 
 User ID
 
-Terminal
+Customer Name
 
 OTP
 
@@ -358,6 +381,8 @@ Read only.
 
 No editing.
 
+This drawer is optional and should not interrupt the normal verification workflow.
+
 ---
 
 # Animations
@@ -366,15 +391,53 @@ Use smooth professional animations.
 
 Animate
 
-Queue movement
-
 Card removal
 
-Status updates
+Queue movement
+
+Status change
+
+Success state
 
 Drawer open/close
 
 Avoid flashy effects.
+
+---
+
+# Components
+
+Organize into reusable components.
+
+components/
+
+verification/
+
+VerificationHeader
+
+VerificationSearch
+
+VerificationQueue
+
+VerificationCard
+
+OTPInput
+
+VerifyButton
+
+VerificationDrawer
+
+VerificationEmptyState
+
+hooks/
+
+useVerificationQueue
+
+utils/
+
+verificationUtils
+
+Business logic must remain outside UI components.
 
 ---
 
@@ -390,41 +453,7 @@ useCallback
 
 Avoid unnecessary re-renders.
 
-Prepare for future support of thousands of print jobs.
-
----
-
-# Components
-
-Organize into reusable components.
-
-components/
-
-queue/
-
-QueueHeader
-
-QueueSearch
-
-QueueCounter
-
-QueueList
-
-QueueCard
-
-QueueDrawer
-
-QueueEmptyState
-
-hooks/
-
-useQueue
-
-utils/
-
-queueUtils
-
-No business logic inside UI components.
+Prepare for hundreds of verification cards.
 
 ---
 
@@ -440,7 +469,7 @@ Consistent naming.
 
 Easy backend integration.
 
-No duplicated code.
+No duplicated logic.
 
 No mock API calls.
 
@@ -448,30 +477,50 @@ Maintain the same UI quality and design language as previous phases.
 
 ---
 
+# Future Backend Integration
+
+Structure the code so the Verify button can later call
+
+POST /verify-order
+
+with
+
+Order ID
+
+OTP
+
+The backend will
+
+Validate OTP
+
+Mark order as Completed
+
+Record collection time
+
+Update payout status
+
+Sync customer history
+
+For now, simulate all verification locally using orders.js.
+
+---
+
 # Professional UI Requirements
 
-Design this like a modern enterprise print management application.
+The verification screen should feel like enterprise counter software used in print shops, courier pickup centers, pharmacies, or POS systems.
 
-The interface should feel similar to commercial print shop software or POS systems.
+Design goals
 
-Use
+- Fast one-click verification
+- Inline OTP entry
+- No unnecessary popups
+- No multiple screens
+- Minimal clicks
+- Clean horizontal cards
+- Excellent readability
+- Compact desktop layout
+- Professional spacing
+- Smooth animations
+- High operator efficiency
 
-- Compact horizontal queue rows
-- Excellent alignment
-- Consistent spacing
-- Professional typography
-- Clean status badges
-- Minimal visual clutter
-- Soft hover effects
-- Smooth transitions
-- Desktop-first responsive layout
-
-Avoid
-
-- Oversized cards
-- Mobile-style layouts
-- Bright colorful designs
-- Unnecessary information
-- Extra buttons inside queue cards
-
-The operator should be able to scan dozens of print jobs quickly and understand the queue at a glance.
+The partner should be able to verify customers quickly without leaving the queue or opening additional windows.
