@@ -1,10 +1,10 @@
-# Phase 6 — Customer Verification Queue
+# Phase 7 — Analytics Dashboard
 
-We are implementing the **Customer Verification Queue** for the PrintEzy Partner Desktop App.
+We are implementing the Analytics page for the PrintEzy Partner Desktop App.
 
-This queue is responsible for handing over printed documents to customers after verifying their OTP.
+This page provides partners with insights into their print shop's performance.
 
-Use the existing design system, typography, spacing, colors, animations, and components from previous phases.
+Use the existing design system, typography, spacing, colors, icons, animations, and components from previous phases.
 
 Do NOT redesign the application.
 
@@ -14,7 +14,7 @@ No backend.
 
 No APIs.
 
-No Printer Service integration.
+All analytics should be calculated from the sample data.
 
 Everything must be modular and production-ready.
 
@@ -22,505 +22,354 @@ Everything must be modular and production-ready.
 
 # Data Source
 
-Load data from
+Use
 
 orders.js
 
-Treat this as the temporary database.
+Generate all analytics from this data.
 
-For this phase, display ONLY orders where
+No mock values.
 
-```js
-status === "Printed"
-```
+---
 
-Ignore
+# Header
+
+Page Title
+
+Analytics
+
+Subtitle
+
+Monitor your print shop performance.
+
+Top Right
+
+Date Range Selector
+
+Options
+
+Today
+
+Last 7 Days
+
+Last 30 Days
+
+All Time
+
+(Default: Today)
+
+Filtering should work locally.
+
+---
+
+# KPI Cards
+
+Display four professional summary cards.
+
+Card 1
+
+Total Orders
+
+Count all orders.
+
+Card 2
+
+Completed Orders
+
+Count
+
+status === "Completed"
+
+Card 3
+
+Revenue
+
+Sum of
+
+price
+
+for Completed orders.
+
+Display in ₹.
+
+Card 4
+
+Pages Printed
+
+Sum
+
+pageCount × copies
+
+for Completed orders.
+
+---
+
+# Second Row
+
+Display four additional cards.
+
+Pending Orders
+
+Count Pending + Processing
+
+Ready for Verification
+
+Count Printed
+
+Average Order Value
+
+Revenue ÷ Completed Orders
+
+Collection Later Orders
+
+Count
+
+collectionType == "later"
+
+---
+
+# Revenue Chart
+
+Display a professional line chart.
+
+X-axis
+
+Date
+
+Y-axis
+
+Revenue
+
+Calculate from Completed orders.
+
+Allow switching between
+
+Daily
+
+Weekly
+
+Monthly
+
+---
+
+# Orders Chart
+
+Display a bar chart.
+
+Show
+
+Completed
 
 Pending
 
-Processing
-
-Completed
+Printed
 
 Cancelled
 
-Ready
+order counts.
 
 ---
 
-# Queue Header
+# Print Mode Distribution
 
-Professional desktop layout.
-
-Left
-
-Ready for Customer Verification
-
-Below
-
-XX Orders Waiting
-
-Automatically update the count.
-
-Right
-
-Search box
-
-No filters.
-
-No sorting.
-
-No refresh button.
-
----
-
-# Search
-
-Search instantly while typing.
-
-Search ONLY by
-
-- Order ID
-- Customer Name
-
-Case insensitive.
-
----
-
-# Queue Layout
-
-Display professional horizontal queue cards.
-
-Desktop optimized.
-
-Compact rows.
-
-Height approximately 90px–110px.
-
-Support many cards on screen.
-
-Avoid mobile-style cards.
-
----
-
-# Queue Card
-
-Each card should display ONLY
-
-• File Name
-
-• Customer Name
-
-• Total Pages
-
-• Copies
-
-• B&W / Colour
-
-• Price
-
-• Collection Type
-
-Display
-
-Collect Now
-
-or
-
-Collect Later
-
-• Printed Status Badge
-
-On the right side of every card place
-
-OTP Input Box
-
-Placeholder
-
-Enter OTP
-
-Verify Button
-
-Entire verification should happen directly on the card.
-
-Do NOT open any drawer.
-
-Do NOT navigate anywhere.
-
-Do NOT use modal dialogs.
-
-Everything happens inline.
-
----
-
-# Card Example
-
-------------------------------------------------------------
-
-📄 Thesis_Final.pdf
-
-Himanshu Jat
-
-48 Pages
-
-2 Copies
+Display a doughnut chart.
 
 B&W
 
-₹96
+Colour
 
-Collect Later
-
-[ OTP __________ ]
-
-[ Verify ]
-
-Printed
-
-------------------------------------------------------------
+Percentage based.
 
 ---
 
-# OTP Input
+# Collection Type
 
-One input field per card.
-
-Accept only numeric values.
-
-Maximum
-
-5 digits
-
-(or use the same OTP length as stored in orders.js)
-
-Disable alphabetic characters.
-
-Pressing Enter should also trigger Verify.
-
----
-
-# Verification Logic
-
-When Verify is pressed
-
-Compare entered OTP with
-
-order.otp
-
-from orders.js.
-
-Temporary local verification only.
-
-No backend.
-
----
-
-# Successful Verification
-
-If OTP matches
-
-Show success animation.
-
-Show green success message
-
-Verification Successful
-
-Update order status
-
-Printed
-
-↓
-
-Completed
-
-Remove the card from the Verification Queue.
-
-Queue counter updates automatically.
-
-Next card shifts upward with smooth animation.
-
----
-
-# Incorrect OTP
-
-If OTP is incorrect
-
-Do NOT remove the card.
-
-Display inline error
-
-Invalid OTP
-
-Please try again.
-
-Clear the input field.
-
-Allow unlimited retries.
-
----
-
-# Loading State
-
-After clicking Verify
-
-Disable button.
-
-Show loading spinner for approximately one second.
-
-Then display either
-
-Success
-
-or
-
-Error.
-
----
-
-# Status Badge
-
-Printed
-
-Blue
-
-Completed
-
-Green
-
----
-
-# Collection Type Badge
+Display a doughnut chart.
 
 Collect Now
 
-Green outline
-
 Collect Later
 
-Orange outline
+---
+
+# Payment Methods
+
+Display a bar chart.
+
+UPI
+
+Card
+
+Wallet
+
+Cash
 
 ---
 
-# Empty Queue
+# Top Customers
 
-If there are no Printed orders
+Display a compact table.
 
-Display professional empty state.
-
-Heading
-
-No Customers Waiting
-
-Description
-
-Printed documents waiting for customer collection will appear here.
-
----
-
-# Queue Counter
-
-Display
-
-Ready for Customer Verification
-
-XX Orders Waiting
-
-Count only
-
-Printed
-
-orders.
-
-Update automatically.
-
----
-
-# View Details
-
-Add a small View Details icon button at the end of every card.
-
-Clicking it opens a read-only side drawer.
-
-Drawer shows
-
-Order ID
-
-Terminal ID
-
-User ID
+Columns
 
 Customer Name
 
-OTP
-
-Filename
+Orders
 
 Pages
 
-Copies
+Revenue
 
-Print Side
-
-Colour Mode
-
-Price
-
-Collection Type
-
-Payment Details
-
-Cloudinary URL
-
-Uploaded Time
-
-Updated Time
-
-Payout Details
-
-Read only.
-
-No editing.
-
-This drawer is optional and should not interrupt the normal verification workflow.
+Top 10 only.
 
 ---
 
-# Animations
+# Recent Activity
 
-Use smooth professional animations.
+Display latest 10 activities.
 
-Animate
+Example
 
-Card removal
+Himanshu Jat
 
-Queue movement
+Completed Thesis.pdf
 
-Status change
+2 min ago
 
-Success state
+Use uploadedAt / updatedAt timestamps.
 
-Drawer open/close
+---
 
-Avoid flashy effects.
+# Quick Statistics
+
+Display
+
+Highest Order Value
+
+Largest Document
+
+Average Pages Per Order
+
+Average Copies Per Order
+
+Total Colour Orders
+
+Total B&W Orders
+
+Cancelled Orders
+
+Completion Rate
+
+---
+
+# Empty State
+
+If no data exists
+
+Display
+
+No Analytics Available
+
+Start receiving orders to view analytics.
 
 ---
 
 # Components
 
-Organize into reusable components.
+analytics/
 
-components/
+AnalyticsHeader
 
-verification/
+KPICards
 
-VerificationHeader
+RevenueChart
 
-VerificationSearch
+OrdersChart
 
-VerificationQueue
+PrintModeChart
 
-VerificationCard
+CollectionChart
 
-OTPInput
+PaymentChart
 
-VerifyButton
+TopCustomers
 
-VerificationDrawer
+RecentActivity
 
-VerificationEmptyState
+QuickStats
+
+AnalyticsEmptyState
 
 hooks/
 
-useVerificationQueue
+useAnalytics
 
 utils/
 
-verificationUtils
+analyticsUtils
 
-Business logic must remain outside UI components.
+---
+
+# Charts
+
+Use a professional chart library already used in the project.
+
+Animations should be smooth.
+
+Desktop responsive.
+
+Avoid flashy colors.
+
+Use the application's existing design system.
 
 ---
 
 # Performance
 
-Use
-
-React.memo
+Calculate analytics using
 
 useMemo
 
-useCallback
-
-Avoid unnecessary re-renders.
-
-Prepare for hundreds of verification cards.
+Avoid recalculating on every render.
 
 ---
 
 # Code Quality
 
-Production-ready architecture.
-
 Reusable components.
 
-Clean folder structure.
+Clean architecture.
 
 Consistent naming.
 
+Production-ready.
+
+No duplicated code.
+
 Easy backend integration.
-
-No duplicated logic.
-
-No mock API calls.
-
-Maintain the same UI quality and design language as previous phases.
 
 ---
 
 # Future Backend Integration
 
-Structure the code so the Verify button can later call
+The page should later consume
 
-POST /verify-order
+GET /analytics
 
-with
+instead of calculating locally.
 
-Order ID
-
-OTP
-
-The backend will
-
-Validate OTP
-
-Mark order as Completed
-
-Record collection time
-
-Update payout status
-
-Sync customer history
-
-For now, simulate all verification locally using orders.js.
+Design the architecture so replacing local calculations with API responses requires minimal changes.
 
 ---
 
-# Professional UI Requirements
+# Professional UI
 
-The verification screen should feel like enterprise counter software used in print shops, courier pickup centers, pharmacies, or POS systems.
+The Analytics page should resemble modern business dashboards.
 
-Design goals
+Keep it clean, minimal, and information-rich.
 
-- Fast one-click verification
-- Inline OTP entry
-- No unnecessary popups
-- No multiple screens
-- Minimal clicks
-- Clean horizontal cards
-- Excellent readability
-- Compact desktop layout
-- Professional spacing
-- Smooth animations
-- High operator efficiency
+Avoid unnecessary graphs.
 
-The partner should be able to verify customers quickly without leaving the queue or opening additional windows.
+Prioritize readability and actionable insights.
+
+Desktop-first layout with consistent spacing and responsive cards.
